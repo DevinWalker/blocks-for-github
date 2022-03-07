@@ -1,0 +1,15 @@
+{
+    "name": "dlocc/github-profile-block",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Devin Walker",
+            "email": "sdtucson@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "GitHubBlock\\": "src/"
+        }
+    }
+}

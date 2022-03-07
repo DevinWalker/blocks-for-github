@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json.schemastore.org/block.json",
+  "apiVersion": 2,
+  "name": "blocks-for-github/profile",
+  "version": "1.0.0",
+  "title": "Blocks for GitHub",
+  "category": "design",
+  "icon": "id-alt",
+  "description": "Display your GitHub profile.",
+  "supports": {
+    "html": false
+  },
+  "attributes": {
+    "apiKeyState": {
+      "type" : "string",
+      "default": ""
+    },
+    "profileName": {
+      "type": "string",
+      "default": "DevinWalker"
+    },
+    "mediaId": {
+      "type": "integer",
+      "default": 0
+    },
+    "mediaUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "showBio": {
+      "type": "boolean",
+      "default": true
+    },
+    "showLocation": {
+      "type" : "boolean",
+      "default": true
+    },
+    "showOrg": {
+      "type" : "boolean",
+      "default": true
+    },
+    "showWebsite": {
+      "type" : "boolean",
+      "default": true
+    },
+    "showTwitter": {
+      "type" : "boolean",
+      "default": true
+    },
+    "preview": {
+      "type" : "boolean",
+      "default": false
+    }
+  },
+  "example": {
+    "attributes": {
+      "preview": true
+    }
+  },
+  "textdomain": "blocks-for-github",
+  "editorScript": "file:./build/index.js",
+  "editorStyle": "file:./build/index.css",
+  "style": "file:./build/style-index.css"
+}

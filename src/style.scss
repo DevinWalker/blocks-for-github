@@ -1,0 +1,275 @@
+/**
+ * Applied to frontend and editor views.
+ */
+
+$bg: #F6F8FA;
+$text-gray-dark: #24292E;
+$text-gray: #586069;
+$text-gray-light: #6A737D;
+$btn-border: #d4d8da;
+$btn-background: #f6f8fa;
+$border-color: #EAEDF0;
+$mobile_width: 500px;
+$font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+
+//div[id^="bfg-profile-wrap-"] {
+.bfg-profile-wrap {
+    background: #FFF;
+    font-family: $font-family;
+    color: $text-gray-dark;
+    margin: 0 auto 2rem;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.15);
+    border: 1px solid $border-color;
+    border-radius: 5px;
+    line-height: 1.5rem;
+    max-width: 750px;
+
+
+    // Resets for theme and gutenberg styles.
+    h3, a, ul, li, ol, li, p {
+        font-family: $font-family;
+        color: $text-gray-dark;
+        margin: 0;
+        padding: 0;
+    }
+
+    a {
+        text-decoration: none;
+
+        &:focus {
+            outline: none;
+        }
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+    .bfg-header {
+        background-size: cover;
+        border-radius: 5px 5px 0 0;
+        margin: 0 0 3rem;
+        height: 130px;
+        text-align: center;
+    }
+
+    // Avatar
+    .bfg-avatar {
+        margin: 1.5rem 0 0;
+        display: inline-block;
+        border-radius: 50%;
+        border: 6px solid #FFF;
+        filter: drop-shadow(0px 0px 2px rgba(0, 0, 0, 0.25));
+        overflow: hidden;
+        background: #DDD;
+
+        img {
+            height: 130px;
+            width: 130px;
+        }
+    }
+
+    // Title
+    .bfg-subheader-content {
+        text-align: center;
+        padding: 0 2rem;
+
+        h3 {
+            margin: 0 0 0.8rem;
+        }
+    }
+
+    // Follow button.
+    .bfg-follow-me {
+        transition: .2s cubic-bezier(0.3, 0, 0.5, 1);
+        border: 1px solid $btn-border;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 0.8rem;
+        color: #000;
+        height: 30px;
+        display: inline-flex;
+        box-shadow: rgba(27, 31, 36, 0.04) 0 1px 0 0;
+        margin: 0 0 2rem;
+
+        span {
+            display: flex;
+            align-items: center;
+        }
+
+        &:hover {
+            border: 1px solid darken($btn-border, 3%);
+            text-decoration: none;
+        }
+
+        &__inner {
+            padding: 0 10px;
+            background: $btn-background;
+            border-right: 1px solid $btn-border;
+            border-radius: 5px 0 0 5px;
+            box-shadow: rgba(255, 255, 255, 0.25) 0 1px 0 0 inset;
+
+            &:hover {
+                background: #e8e9ea;
+            }
+
+            &--svg svg {
+                width: 20px;
+                padding: 0 6px 0 0;
+            }
+
+        }
+
+        &__count {
+            border-radius: 0 5px 5px 0;
+            padding: 0 10px;
+            background: #FFF;
+        }
+    }
+
+    // Bio
+    .bfg-bio-wrap {
+        background: $bg;
+        border-radius: 6px;
+        padding: 1rem 2rem;
+        margin: -0.3rem 3rem 2rem;
+        text-align: center;
+        position: relative;
+
+        @media(max-width: $mobile_width) {
+            padding: 1rem;
+            margin-left: 2rem;
+            margin-right: 2rem;
+        }
+
+        &:before {
+            content: ' ';
+            height: 0;
+            width: 0;
+            position: absolute;
+            top: -0.9rem;
+            transform: translate(-50%, 0%);
+            border-right: solid 15px transparent;
+            border-left: solid 15px transparent;
+            border-bottom: solid 15px $bg;
+        }
+    }
+
+    // Meta list.
+    .bfg-meta-list {
+        background: $bg;
+        margin: 0;
+        padding: 0.5rem 2rem;
+        display: flex;
+
+
+        justify-content: space-around;
+        flex-flow: row wrap;
+        border-top: 1px solid $border-color;
+        border-bottom: 1px solid $border-color;
+
+        li, a {
+            display: flex;
+            align-items: center;
+            line-height: 1.4rem;
+            font-weight: 400;
+            font-size: 1rem;
+        }
+
+        li {
+            list-style-type: none;
+            padding: 0.5rem;
+        }
+
+        svg {
+            margin-right: 0.15rem;
+        }
+
+        }
+
+    .bfg-bottom-wrap {
+        padding: 2rem;
+    }
+
+    // Repo / Gist lists
+    .bfg-github-list {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+
+        li {
+            border: 1px solid $border-color;
+            padding: 0.9rem 1.25rem;
+            border-radius: 5px;
+            margin: 0 0 1rem;
+
+            &:last-of-type {
+                margin-bottom: 0;
+            }
+        }
+
+        .bfg-top-repo {
+
+            &__top {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin: 0 0 0.7rem;
+
+                @media(max-width: $mobile_width) {
+                    display: block;
+                }
+
+            }
+
+            &__link {
+                font-size: 1.1rem;
+                font-weight: 500;
+                @media(max-width: $mobile_width) {
+                    display: block;
+                    margin: 0 0 0.5rem;
+                }
+            }
+
+            &__description {
+                font-style: italic;
+                font-size: 1rem;
+                line-height: 1.4rem;
+            }
+        }
+
+        .bfg-top-repo-pill-wrap {
+            display: flex;
+            white-space: nowrap;
+            align-items: flex-start;
+        }
+
+        .bfg-top-repo-pill {
+            color: #57606A;
+            border-radius: 1rem;
+            padding: 0 0.6rem;
+            font-size: 0.9rem;
+
+            &--purple {
+                background: #f5f3ff;
+                margin-right: 0.1rem;
+            }
+
+            &--blue {
+                background: #F1F8FF;
+                margin-right: 0.1rem;
+            }
+
+            &--gold {
+                background: #FFFDEF;
+            }
+
+            svg {
+                fill: #57606A
+            }
+        }
+
+    }
+
+}

@@ -1,0 +1,30 @@
+{
+  "name": "blocks-for-github",
+  "version": "1.0.0",
+  "description": "Easily display your GitHub profile, organization, repositories, gists, and more within the WordPress Block Editor aka \"Gutenberg\".",
+  "author": "Devin Walker",
+  "license": "GPL-2.0-or-later",
+  "main": "build/index.js",
+  "scripts": {
+    "build": "wp-scripts build",
+    "format": "wp-scripts format",
+    "lint:css": "wp-scripts lint-style",
+    "lint:js": "wp-scripts lint-js",
+    "start": "wp-scripts start",
+    "run": "wp-scripts start",
+    "packages-update": "wp-scripts packages-update"
+  },
+  "dependencies": {
+    "@wordpress/block-editor": "^8.0.13",
+    "@wordpress/blocks": "^11.1.5",
+    "@wordpress/data": "^6.1.5",
+    "@wordpress/dom-ready": "^3.2.3",
+    "@wordpress/i18n": "^4.2.4",
+    "@wordpress/server-side-render": "^3.0.17"
+  },
+  "devDependencies": {
+    "@svgr/webpack": "^6.2.0",
+    "@wordpress/scripts": "^19.2.2",
+    "url-loader": "^4.1.1"
+  }
+}
