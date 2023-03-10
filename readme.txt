@@ -1,7 +1,7 @@
 === Blocks for GitHub ===
 Contributors:      dlocc
 Tags:              github, github block, block github, gist
-Tested up to:      5.9.0
+Tested up to:      6.2
 Stable tag:        1.0.0
 License:           GPL-2.0-or-later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
@@ -29,10 +29,6 @@ e.g.
 = A question that someone might have =
 
 An answer to that question.
-
-= What about foo bar? =
-
-Answer to foo bar dilemma.
 
 == Screenshots ==
 
