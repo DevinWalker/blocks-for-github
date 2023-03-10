@@ -50,6 +50,7 @@ class ProfileBlock
 
     protected function getHeaders(): array
     {
+        error_log( print_r( $this->accessToken, true ), 3, __DIR__ . '/debug_custom.log' );
         return [
             'headers' =>
                 [
@@ -122,7 +123,7 @@ class ProfileBlock
      */
     public function render()
     {
-        if ( is_admin() && ! $this->accessToken) :
+        if (is_admin() && ! $this->accessToken) :
             ob_start();
             include BLOCKS_FOR_GITHUB_DIR . '/src/views/welcome.php';
 
@@ -132,6 +133,25 @@ class ProfileBlock
 
         if ( ! $this->transient) {
             $data = $this->fetchProfile();
+
+//            error_log( print_r( $data, true ), 3, __DIR__ . '/debug_custom.log' );
+            if (isset($data->message)) {
+                if ($data->message === 'Bad credentials') {
+                    ob_start();
+                    include BLOCKS_FOR_GITHUB_DIR . 'src/views/error-github-bad-creds.php';
+
+                    return ob_get_clean();
+                }
+
+                if ($data->message === 'Not Found') {
+                    ob_start();
+                    include BLOCKS_FOR_GITHUB_DIR . 'src/views/error-github-profile-404.php';
+
+                    return ob_get_clean();
+                }
+            }
+
+            // TODO: Uncomment before release
             // set_transient($this->transientKey, $this->transient, HOUR_IN_SECONDS);
         }
 
@@ -257,7 +277,8 @@ class ProfileBlock
                                         <?php
                                         if ($repo->archived) : ?>
                                             <span class="bfg-top-repo-pill bfg-top-repo-pill--purple"><?php
-                                                echo file_get_contents(BLOCKS_FOR_GITHUB_DIR . '/assets/images/archive.svg'); ?><?php esc_html_e('Archived', 'blocks-for-github');
+                                                echo file_get_contents(BLOCKS_FOR_GITHUB_DIR . '/assets/images/archive.svg'); ?><?php
+                                                esc_html_e('Archived', 'blocks-for-github');
                                                 ?></span>
                                         <?php
                                         endif; ?>
