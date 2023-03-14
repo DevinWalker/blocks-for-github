@@ -15,6 +15,10 @@
       "type" : "string",
       "default": ""
     },
+    "apiKey": {
+      "type" : "string",
+      "default": ""
+    },
     "profileName": {
       "type": "string",
       "default": "DevinWalker"
@@ -50,11 +54,6 @@
     "preview": {
       "type" : "boolean",
       "default": false
-    }
-  },
-  "example": {
-    "attributes": {
-      "preview": true
     }
   },
   "textdomain": "blocks-for-github",

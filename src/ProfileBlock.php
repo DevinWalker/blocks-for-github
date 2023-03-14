@@ -7,6 +7,7 @@ namespace GitHubBlock;
 class ProfileBlock
 {
 
+
     public array $attributes;
     private string $accessToken;
     private string $transientKey;
@@ -25,7 +26,7 @@ class ProfileBlock
 
     private function getAccessToken()
     {
-        return $this->accessToken = get_option('blocks_for_github_plugin_personal_token', $this->attributes['apiKeyState']);
+        return $this->accessToken = get_option('blocks_for_github_plugin_personal_token', $this->attributes['apiKey']);
     }
 
 
@@ -50,7 +51,6 @@ class ProfileBlock
 
     protected function getHeaders(): array
     {
-        error_log( print_r( $this->accessToken, true ), 3, __DIR__ . '/debug_custom.log' );
         return [
             'headers' =>
                 [
@@ -106,7 +106,7 @@ class ProfileBlock
 
         if (is_wp_error($reposRequest)) :
             ob_start();
-            include 'src/template-parts/error-wp.php';
+            include 'src/error-wp.php';
 
             return ob_get_clean();
         endif;
@@ -123,33 +123,8 @@ class ProfileBlock
      */
     public function render()
     {
-        if (is_admin() && ! $this->accessToken) :
-            ob_start();
-            include BLOCKS_FOR_GITHUB_DIR . '/src/views/welcome.php';
-
-            return ob_get_clean();
-        endif;
-
-
         if ( ! $this->transient) {
             $data = $this->fetchProfile();
-
-//            error_log( print_r( $data, true ), 3, __DIR__ . '/debug_custom.log' );
-            if (isset($data->message)) {
-                if ($data->message === 'Bad credentials') {
-                    ob_start();
-                    include BLOCKS_FOR_GITHUB_DIR . 'src/views/error-github-bad-creds.php';
-
-                    return ob_get_clean();
-                }
-
-                if ($data->message === 'Not Found') {
-                    ob_start();
-                    include BLOCKS_FOR_GITHUB_DIR . 'src/views/error-github-profile-404.php';
-
-                    return ob_get_clean();
-                }
-            }
 
             // TODO: Uncomment before release
             // set_transient($this->transientKey, $this->transient, HOUR_IN_SECONDS);
