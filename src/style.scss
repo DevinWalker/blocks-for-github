@@ -13,7 +13,7 @@ $mobile_width: 500px;
 $font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
 
 //div[id^="bfg-profile-wrap-"] {
-.bfg-profile-wrap {
+.bfg-wrap {
     background: #FFF;
     font-family: $font-family;
     color: $text-gray-dark;
@@ -129,7 +129,7 @@ $font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, s
     }
 
     // Bio
-    .bfg-bio-wrap {
+    .bfg-bio-wrap, .bfg-repo-description {
         background: $bg;
         border-radius: 6px;
         padding: 1rem 2rem;
@@ -186,7 +186,7 @@ $font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, s
             margin-right: 0.15rem;
         }
 
-        }
+    }
 
     .bfg-bottom-wrap {
         padding: 2rem;
@@ -272,4 +272,71 @@ $font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, s
 
     }
 
+}
+
+
+// Repo specific
+.bfg-repo-header {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+
+    .bfg-repo-avatar-wrap {
+        flex-shrink: 0;
+        margin: 0;
+        padding: 20px 10px 20px 20px;
+
+        img {
+            height: 130px;
+            width: 130px;
+            margin: 0;
+            padding:0;
+        }
+
+    }
+
+    .bfg-repo-content {
+        padding: 20px 20px 20px 10px;
+    }
+
+    .bfg-repo-description {
+        margin: 0;
+        text-align: left;
+    }
+
+    .bfg-repo-header {
+        display: flex;
+        justify-content: space-between;
+        margin: 0 0 28px;
+
+        .bfg-repo-name-wrap {
+            justify-content: flex-start;
+
+            .bfg-repo-name {
+                margin: 0 0 5px;
+            }
+        }
+
+        .bfg-follow-me {
+            justify-content: flex-end;
+        }
+
+        .bfg-repo-byline {
+            font-style: italic;
+        }
+
+    }
+
+
+}
+
+
+// Repo Meta
+.bfg-meta-list {
+    svg {
+        width: 18px;
+        height: 18px;
+        margin: 0 3px 0 0;
+        padding:0;
+    }
 }

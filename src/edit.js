@@ -4,6 +4,7 @@ import {
     CheckboxControl,
     PanelBody,
     PanelRow,
+    RadioControl,
     ResponsiveWrapper,
     Spinner,
     TextControl,
@@ -25,8 +26,10 @@ import './editor.scss';
  */
 export default function Edit( { attributes, setAttributes } ) {
     const {
+        blockType,
         apiKey,
         profileName,
+        repoUrl,
         showBio,
         showLocation,
         showOrg,
@@ -132,123 +135,155 @@ export default function Edit( { attributes, setAttributes } ) {
         <Fragment>
             <Fragment>
                 <InspectorControls>
-                    <PanelBody title={__( 'Profile Settings', 'blocks-for-github' )} initialOpen={true}>
+                    <PanelBody title={__( 'Block Display', 'blocks-for-github' )} initialOpen={true}>
                         <PanelRow>
-                            <TextControl
-                                label={__( 'GitHub Username', 'blocks-for-github' )}
-                                value={profileName}
-                                help={__( 'Please enter a GitHub profile username to display for this block.', 'blocks-for-github' )}
-                                onChange={( newProfileName ) => {
-                                    setAttributes( { profileName: newProfileName } );
-                                }}
-                            />
-                        </PanelRow>
-                        <PanelRow>
-                            <div className="bfg-media-uploader">
-                                <p className={'bfg-label'}>
-                                    <label>{__( 'Header background image', 'blocks-for-github' )}</label>
-                                </p>
-                                <MediaUploadCheck>
-                                    <MediaUpload
-                                        onSelect={onSelectMedia}
-                                        value={attributes.mediaId}
-                                        allowedTypes={['image']}
-                                        render={( { open } ) => (
-                                            <Button
-                                                className={attributes.mediaId === 0 ? 'editor-post-featured-image__toggle' : 'editor-post-featured-image__preview'}
-                                                onClick={open}
-                                            >
-                                                {attributes.mediaId === 0 && __( 'Choose an image', 'blocks-for-github' )}
-                                                {media !== undefined &&
-                                                    <ResponsiveWrapper
-                                                        naturalWidth={media.media_details.width}
-                                                        naturalHeight={media.media_details.height}
-                                                    >
-                                                        <img src={media.source_url} />
-                                                    </ResponsiveWrapper>
-                                                }
-                                            </Button>
-                                        )}
-                                    />
-                                </MediaUploadCheck>
-                                <div className="bfg-media-btns">
-                                    {attributes.mediaId !== 0 &&
-                                        <MediaUploadCheck>
-                                            <MediaUpload
-                                                title={__( 'Replace image', 'blocks-for-github' )}
-                                                value={attributes.mediaId}
-                                                onSelect={onSelectMedia}
-                                                allowedTypes={['image']}
-                                                render={( { open } ) => (
-                                                    <Button onClick={open} isSmall variant="secondary" className={'bfg-replace-image-btn'}>{__( 'Replace image', 'blocks-for-github' )}</Button>
-                                                )}
-                                            />
-                                        </MediaUploadCheck>
-                                    }
-                                    {attributes.mediaId !== 0 &&
-                                        <MediaUploadCheck>
-                                            <Button onClick={removeMedia} isSmall variant="secondary">{__( 'Remove image', 'blocks-for-github' )}</Button>
-                                        </MediaUploadCheck>
-                                    }
-                                </div>
-                                <p className={'bfg-help-text'}>{__( 'Upload or select an image for the header background.', 'blocks-for-github' )}</p>
-                            </div>
-                        </PanelRow>
-                        <PanelRow>
-                            <CheckboxControl
-                                label={__( 'Show bio', 'blocks-for-github' )}
-                                checked={showBioChecked}
-                                onChange={( newShowBio ) => {
-                                    setShowBio( newShowBio );
-                                    setAttributes( { showBio: newShowBio } );
-                                }}
-                            />
-                        </PanelRow>
-                        <PanelRow>
-                            <CheckboxControl
-                                label={__( 'Show location', 'blocks-for-github' )}
-                                checked={showLocationChecked}
-                                onChange={( newShowLocation ) => {
-                                    setShowLocation( newShowLocation );
-                                    setAttributes( { showLocation: newShowLocation } );
-                                }}
-                            />
-                        </PanelRow>
-                        <PanelRow>
-                            <CheckboxControl
-                                label={__( 'Show organization', 'blocks-for-github' )}
-                                checked={showOrgChecked}
-                                onChange={( newShowOrg ) => {
-                                    setShowOrg( newShowOrg );
-                                    setAttributes( { showOrg: newShowOrg } );
-                                }}
-                            />
-                        </PanelRow>
-                        <PanelRow>
-                            <CheckboxControl
-                                label={__( 'Show website', 'blocks-for-github' )}
-                                checked={showWebsiteChecked}
-                                onChange={( newShowWebsite ) => {
-                                    setShowWebsite( newShowWebsite );
-                                    setAttributes( { showWebsite: newShowWebsite } );
-                                }}
-                            />
-                        </PanelRow>
-                        <PanelRow>
-                            <CheckboxControl
-                                label={__( 'Show Twitter', 'blocks-for-github' )}
-                                checked={showTwitterChecked}
-                                onChange={( newShowTwitter ) => {
-                                    setShowTwitter( newShowTwitter );
-                                    setAttributes( { showTwitter: newShowTwitter } );
+                            <RadioControl
+                                label={__( 'Display Options', 'blocks-for-github' )}
+                                help={__( 'This option adjusts the content displayed in the block. Some views require an API key to display.', 'blocks-for-github' )}
+                                selected={blockType}
+                                options={[
+                                    { label: 'Repository', value: 'repository' },
+                                    { label: 'Profile (API Key Required)', value: 'profile' },
+                                ]}
+                                onChange={( newBlockType ) => {
+                                    setAttributes( { blockType: newBlockType } );
                                 }}
                             />
                         </PanelRow>
                     </PanelBody>
-                    <PanelBody title={__( 'GitHub API Setting', 'blocks-for-github' )} initialOpen={false}>
+                    {blockType === 'repository' && (
+                        <PanelBody title={__( 'Repository Settings', 'blocks-for-github' )} initialOpen={false}>
+                            <PanelRow>
+                                <TextControl
+                                    label={__( 'Repo URL', 'blocks-for-github' )}
+                                    value={repoUrl}
+                                    help={__( 'Please enter the URL contents after the `https://github.com/` string. For example: `impress-org/givewp`.', 'blocks-for-github' )}
+                                    onChange={( newRepoUrl ) => {
+                                        setAttributes( { repoUrl: newRepoUrl } );
+                                    }}
+                                />
+                            </PanelRow>
+                        </PanelBody>
+                    )}
+                    {blockType === 'profile' && (
+                        <PanelBody title={__( 'Profile Settings', 'blocks-for-github' )} initialOpen={false}>
+                            <PanelRow>
+                                <TextControl
+                                    label={__( 'GitHub Username', 'blocks-for-github' )}
+                                    value={profileName}
+                                    help={__( 'Please enter a GitHub profile username to display for this block.', 'blocks-for-github' )}
+                                    onChange={( newProfileName ) => {
+                                        setAttributes( { profileName: newProfileName } );
+                                    }}
+                                />
+                            </PanelRow>
+                            <PanelRow>
+                                <div className="bfg-media-uploader">
+                                    <p className={'bfg-label'}>
+                                        <label>{__( 'Header background image', 'blocks-for-github' )}</label>
+                                    </p>
+                                    <MediaUploadCheck>
+                                        <MediaUpload
+                                            onSelect={onSelectMedia}
+                                            value={attributes.mediaId}
+                                            allowedTypes={['image']}
+                                            render={( { open } ) => (
+                                                <Button
+                                                    className={attributes.mediaId === 0 ? 'editor-post-featured-image__toggle' : 'editor-post-featured-image__preview'}
+                                                    onClick={open}
+                                                >
+                                                    {attributes.mediaId === 0 && __( 'Choose an image', 'blocks-for-github' )}
+                                                    {media !== undefined &&
+                                                        <ResponsiveWrapper
+                                                            naturalWidth={media.media_details.width}
+                                                            naturalHeight={media.media_details.height}
+                                                        >
+                                                            <img src={media.source_url} />
+                                                        </ResponsiveWrapper>
+                                                    }
+                                                </Button>
+                                            )}
+                                        />
+                                    </MediaUploadCheck>
+                                    <div className="bfg-media-btns">
+                                        {attributes.mediaId !== 0 &&
+                                            <MediaUploadCheck>
+                                                <MediaUpload
+                                                    title={__( 'Replace image', 'blocks-for-github' )}
+                                                    value={attributes.mediaId}
+                                                    onSelect={onSelectMedia}
+                                                    allowedTypes={['image']}
+                                                    render={( { open } ) => (
+                                                        <Button onClick={open} isSmall variant="secondary" className={'bfg-replace-image-btn'}>{__( 'Replace image', 'blocks-for-github' )}</Button>
+                                                    )}
+                                                />
+                                            </MediaUploadCheck>
+                                        }
+                                        {attributes.mediaId !== 0 &&
+                                            <MediaUploadCheck>
+                                                <Button onClick={removeMedia} isSmall variant="secondary">{__( 'Remove image', 'blocks-for-github' )}</Button>
+                                            </MediaUploadCheck>
+                                        }
+                                    </div>
+                                    <p className={'bfg-help-text'}>{__( 'Upload or select an image for the header background.', 'blocks-for-github' )}</p>
+                                </div>
+                            </PanelRow>
+                            <PanelRow>
+                                <CheckboxControl
+                                    label={__( 'Show bio', 'blocks-for-github' )}
+                                    checked={showBioChecked}
+                                    onChange={( newShowBio ) => {
+                                        setShowBio( newShowBio );
+                                        setAttributes( { showBio: newShowBio } );
+                                    }}
+                                />
+                            </PanelRow>
+                            <PanelRow>
+                                <CheckboxControl
+                                    label={__( 'Show location', 'blocks-for-github' )}
+                                    checked={showLocationChecked}
+                                    onChange={( newShowLocation ) => {
+                                        setShowLocation( newShowLocation );
+                                        setAttributes( { showLocation: newShowLocation } );
+                                    }}
+                                />
+                            </PanelRow>
+                            <PanelRow>
+                                <CheckboxControl
+                                    label={__( 'Show organization', 'blocks-for-github' )}
+                                    checked={showOrgChecked}
+                                    onChange={( newShowOrg ) => {
+                                        setShowOrg( newShowOrg );
+                                        setAttributes( { showOrg: newShowOrg } );
+                                    }}
+                                />
+                            </PanelRow>
+                            <PanelRow>
+                                <CheckboxControl
+                                    label={__( 'Show website', 'blocks-for-github' )}
+                                    checked={showWebsiteChecked}
+                                    onChange={( newShowWebsite ) => {
+                                        setShowWebsite( newShowWebsite );
+                                        setAttributes( { showWebsite: newShowWebsite } );
+                                    }}
+                                />
+                            </PanelRow>
+                            <PanelRow>
+                                <CheckboxControl
+                                    label={__( 'Show Twitter', 'blocks-for-github' )}
+                                    checked={showTwitterChecked}
+                                    onChange={( newShowTwitter ) => {
+                                        setShowTwitter( newShowTwitter );
+                                        setAttributes( { showTwitter: newShowTwitter } );
+                                    }}
+                                />
+                            </PanelRow>
+                        </PanelBody>
+                    )}
+                    <PanelBody title={__( 'GitHub Access Token', 'blocks-for-github' )} initialOpen={false}>
                         <PanelRow>
                             <TextControl
-                                label={__( 'GitHub Access Token', 'blocks-for-github' )}
+                                label={__( 'Access Token', 'blocks-for-github' )}
                                 value={apiKey}
                                 type={'password'}
                                 help={
@@ -292,7 +327,7 @@ export default function Edit( { attributes, setAttributes } ) {
                 <div {...useBlockProps()}>
                     {(apiKeyLoading) &&
                         <div className="bfg-loading">
-                            <Spinner />
+                            <Spinner size={'large'} />
                         </div>
                     }
 
@@ -300,18 +335,20 @@ export default function Edit( { attributes, setAttributes } ) {
                         <div id="bfg-info-wrap">
                             <div className="bfg-info-wrap-inner">
                                 <span className="bfg-info-emoji">👋</span>
-                                <h2>{ __('Welcome to Blocks for GitHub!', 'blocks-for-github') }</h2>
-                                <p>{ __('To begin, please enter your GitHub personal access token in the block\'s setting panel to the right. Don\'t worry, you\'ll only have to do this one time.', 'blocks-for-github') }</p>
+                                <h2>{__( 'Welcome to Blocks for GitHub!', 'blocks-for-github' )}</h2>
+                                <p>{__( 'To begin, please enter your GitHub personal access token in the block\'s setting panel to the right. Don\'t worry, you\'ll only have to do this one time.', 'blocks-for-github' )}</p>
                             </div>
                         </div>
                     }
 
                     {(apiKey !== '' && apiKey !== undefined && !apiKeyLoading) && (
                         <ServerSideRender
-                            block="blocks-for-github/profile"
+                            block="blocks-for-github/block"
                             attributes={{
+                                blockType: attributes.blockType,
                                 apiKey: attributes.apiKey,
                                 profileName: attributes.profileName,
+                                repoUrl: attributes.repoUrl,
                                 mediaId: attributes.mediaId,
                                 mediaUrl: attributes.mediaUrl,
                                 showBio: attributes.showBio,

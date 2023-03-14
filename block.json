@@ -1,16 +1,20 @@
 {
   "$schema": "https://json.schemastore.org/block.json",
   "apiVersion": 2,
-  "name": "blocks-for-github/profile",
+  "name": "blocks-for-github/block",
   "version": "1.0.0",
   "title": "Blocks for GitHub",
   "category": "design",
   "icon": "id-alt",
-  "description": "Display your GitHub profile.",
+  "description": "Display your GitHub content in a variety of useful ways.",
   "supports": {
     "html": false
   },
   "attributes": {
+    "blockType": {
+      "type" : "string",
+      "default": "repository"
+    },
     "apiKeyState": {
       "type" : "string",
       "default": ""
@@ -22,6 +26,10 @@
     "profileName": {
       "type": "string",
       "default": "DevinWalker"
+    },
+    "repoUrl": {
+      "type": "string",
+      "default": "impress-org/givewp"
     },
     "mediaId": {
       "type": "integer",

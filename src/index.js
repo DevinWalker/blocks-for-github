@@ -24,7 +24,7 @@ import Edit from './edit';
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-registration/
  */
-registerBlockType( 'blocks-for-github/profile', {
+registerBlockType( 'blocks-for-github/block', {
 
 	/**
 	 * @see ./edit.js

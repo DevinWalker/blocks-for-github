@@ -52,7 +52,7 @@ class Bootstrap
 
     public function blockRenderCallback($attributes)
     {
-        $block = new ProfileBlock($attributes);
+        $block = new Block($attributes);
         return $block->render();
     }
 
