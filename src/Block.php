@@ -7,6 +7,7 @@ use DateTime;
 
 class Block
 {
+
     public array $attributes;
     private string $accessToken;
     private string $transientKey;
@@ -42,7 +43,7 @@ class Block
 
     protected function fetchData(string $url, string $keySuffix = '')
     {
-        $key = $this->transientKey . $keySuffix;
+        $key  = $this->transientKey . $keySuffix;
         $data = get_transient($key);
 
         if (empty($data)) {
@@ -93,11 +94,13 @@ class Block
     {
         if ($this->attributes['blockType'] === 'repository') {
             $data = $this->fetchData('https://api.github.com/repos/' . $this->attributes['repoUrl'], $this->attributes['repoUrl']);
+
             return $this->renderRepo($data);
         }
 
         if ($this->attributes['blockType'] === 'profile') {
             $data = $this->fetchData("https://api.github.com/users/{$this->attributes['profileName']}", $this->attributes['profileName']);
+
             return $this->renderProfile($data);
         }
     }
@@ -106,22 +109,24 @@ class Block
     {
         ob_start(); ?>
         <div class="bfg-wrap">
-            <div class="bfg-repo-header">
-                <div class="bfg-repo-avatar-wrap">
-                    <img class="bfg-avatar" src="<?php esc_html_e($data->owner->avatar_url); ?>" alt="<?php esc_html_e($data->name); ?>" />
-                </div>
 
+            <div class="bfg-repo-header bfg-grid-container">
+                <div class="bfg-repo-avatar-wrap">
+                    <img class="bfg-avatar" src="<?php
+                    esc_html_e($data->owner->avatar_url); ?>" alt="<?php
+                    esc_html_e($data->name); ?>" />
+                </div>
                 <div class="bfg-repo-content">
-                    <div class="bfg-repo-header">
-                        <div class="bfg-repo-name-wrap">
-                            <h3 class="bfg-repo-name">
-                                <a href="<?php
-                                esc_html_e($data->html_url); ?>" target="_blank" rel="noopener noreferrer"><?php
-                                    esc_html_e($data->name); ?></a>
-                            </h3>
-                            <span class="bfg-repo-byline"><?php
-                                echo esc_html__('By', 'blocks-for-github') . ' ' . esc_html__($data->organization->login); ?></span>
-                        </div>
+                    <div class="bfg-repo-name-wrap">
+                        <h3 class="bfg-repo-name">
+                            <a href="<?php
+                            esc_html_e($data->html_url); ?>" target="_blank" rel="noopener noreferrer"><?php
+                                esc_html_e($data->name); ?></a>
+                        </h3>
+                        <span class="bfg-repo-byline"><?php
+                            echo esc_html__('By', 'blocks-for-github') . ' ' . esc_html__($data->organization->login); ?></span>
+                    </div>
+                    <div class="bfg-repo-follow-wrap">
                         <a href="<?php
                         esc_html_e($data->html_url); ?>" class="bfg-follow-me" target="_blank">
                             <span class="bfg-follow-me__inner">
@@ -136,28 +141,30 @@ class Block
                                 esc_html_e(number_format_i18n($data->stargazers_count)); ?></span>
                         </a>
                     </div>
-
-                    <p class="bfg-repo-description"><?php
-                        esc_html_e($data->description); ?></p>
                 </div>
             </div>
 
+            <div class="bfg-repo-description-wrap">
+                <p class="bfg-repo-description"><?php
+                    esc_html_e($data->description); ?></p>
+            </div>
+
             <ul class="bfg-meta-list">
-                <li><?php
+                <li class="bfg-meta-list--updated"><?php
                     // Last update:
                     $dateTime      = new DateTime($data->updated_at);
                     $formattedDate = $dateTime->format('m-d-Y');
-                    echo file_get_contents(BLOCKS_FOR_GITHUB_DIR . '/assets/images/mark-github.svg');
+                    echo file_get_contents(BLOCKS_FOR_GITHUB_DIR . '/assets/images/calendar.svg');
                     echo esc_html__('Last Update', 'blocks-for-github') . ' ' . $formattedDate; ?></li>
-                <li><?php
+                <li class="bfg-meta-list--issues"><?php
                     // Open issues:
-                    echo file_get_contents(BLOCKS_FOR_GITHUB_DIR . '/assets/images/mark-github.svg');
+                    echo file_get_contents(BLOCKS_FOR_GITHUB_DIR . '/assets/images/flag.svg');
                     echo esc_html__('Open Issues', 'blocks-for-github') . ' ' . esc_html__(number_format_i18n($data->open_issues)); ?></li>
-                <li><?php
+                <li class="bfg-meta-list--subscribers"><?php
                     // Subscribers
                     echo file_get_contents(BLOCKS_FOR_GITHUB_DIR . '/assets/images/mark-github.svg');
                     echo esc_html__('Subscribers', 'blocks-for-github') . ' ' . esc_html__(number_format_i18n($data->subscribers_count)); ?></li>
-                <li><?php
+                <li class="bfg-meta-list--forks"><?php
                     echo file_get_contents(BLOCKS_FOR_GITHUB_DIR . '/assets/images/fork.svg');
                     echo esc_html__('Forks', 'blocks-for-github') . ' ' . esc_html__(number_format_i18n($data->forks)); ?></li>
             </ul>
@@ -225,7 +232,7 @@ class Block
                 <ul class="bfg-meta-list">
                     <?php
                     if ( ! empty($data->location) && $this->attributes['showLocation']) : ?>
-                        <li>
+                        <li class="bfg-meta-list--location">
                             <a href="https://www.google.com/maps/search/?api=1&query=<?php
                             echo urlencode($data->location); ?>" target="_blank"><?php
                                 echo file_get_contents(BLOCKS_FOR_GITHUB_DIR . '/assets/images/location.svg'); ?><?php
@@ -235,7 +242,7 @@ class Block
                     endif; ?>
                     <?php
                     if ( ! empty($data->company) && $this->attributes['showOrg']) : ?>
-                        <li>
+                        <li class="bfg-meta-list--company">
                             <?php
                             echo file_get_contents(BLOCKS_FOR_GITHUB_DIR . '/assets/images/building.svg'); ?><?php
                             esc_html_e($data->company); ?>
@@ -244,7 +251,7 @@ class Block
                     endif; ?>
                     <?php
                     if ( ! empty($data->blog) && $this->attributes['showWebsite']) : ?>
-                        <li>
+                        <li class="bfg-meta-list--website">
                             <a href="<?php
                             esc_html_e($data->blog); ?>" target="_blank"><?php
                                 echo file_get_contents(BLOCKS_FOR_GITHUB_DIR . '/assets/images/link.svg'); ?>
@@ -255,7 +262,7 @@ class Block
                     endif; ?>
                     <?php
                     if ( ! empty($data->twitter_username) && $this->attributes['showTwitter']) : ?>
-                        <li>
+                        <li class="bfg-meta-list--twitter">
                             <a href="https://twitter.com/<?php
                             esc_html_e($data->twitter_username); ?>" target="_blank"><?php
                                 echo file_get_contents(BLOCKS_FOR_GITHUB_DIR . '/assets/images/twitter.svg'); ?>

@@ -132,7 +132,7 @@ $font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, s
     .bfg-bio-wrap, .bfg-repo-description {
         background: $bg;
         border-radius: 6px;
-        padding: 1rem 2rem;
+        padding: 1rem;
         margin: -0.3rem 3rem 2rem;
         text-align: center;
         position: relative;
@@ -160,7 +160,7 @@ $font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, s
     .bfg-meta-list {
         background: $bg;
         margin: 0;
-        padding: 0.5rem 2rem;
+        padding: 0.5rem 1rem;
         display: flex;
 
 
@@ -183,7 +183,11 @@ $font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, s
         }
 
         svg {
-            margin-right: 0.15rem;
+            margin-right: 0.25rem;
+
+            path {
+                fill: $text-gray-dark;
+            }
         }
 
     }
@@ -277,38 +281,32 @@ $font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, s
 
 // Repo specific
 .bfg-repo-header {
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
+    display: grid;
+    grid-template-columns: auto 1fr;
 
     .bfg-repo-avatar-wrap {
-        flex-shrink: 0;
+        grid-column: 1;
         margin: 0;
         padding: 20px 10px 20px 20px;
 
         img {
-            height: 130px;
-            width: 130px;
+            height:100px;
+            width: 100px;
             margin: 0;
             padding:0;
+            border: 3px solid #FFF;
         }
 
     }
 
     .bfg-repo-content {
-        padding: 20px 20px 20px 10px;
-    }
-
-    .bfg-repo-description {
-        margin: 0;
-        text-align: left;
-    }
-
-    .bfg-repo-header {
+        grid-row: 1;
+        grid-column: 2;
         display: flex;
         flex-wrap: wrap;
         justify-content: space-between;
-        margin: 0 0 28px;
+        margin: 0;
+        padding: 20px 20px 20px 10px;
 
         .bfg-repo-name-wrap {
             justify-content: flex-start;
@@ -319,7 +317,7 @@ $font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, s
         }
 
         .bfg-follow-me {
-            justify-content: flex-end;
+            margin: 0;
         }
 
         .bfg-repo-byline {
@@ -327,6 +325,22 @@ $font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, s
         }
 
     }
+
+}
+
+
+.bfg-repo-description-wrap {
+    margin: 0 20px 20px;
+
+    .bfg-repo-description {
+        margin: 0;
+        text-align: left;
+
+        &:before {
+            left: 50px;
+        }
+    }
+
 
 
 }

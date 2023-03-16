@@ -49,8 +49,6 @@ export default function Edit( { attributes, setAttributes } ) {
         );
     }
 
-    // const [apiKey, setApiKey] = useState( '' );
-    const [apiKeyState, setApiKeyState] = useState( '' );
     const [apiKeyLoading, setApiKeyLoading] = useState( false );
     const [showBioChecked, setShowBio] = useState( showBio );
     const [showLocationChecked, setShowLocation] = useState( showLocation );
@@ -109,7 +107,6 @@ export default function Edit( { attributes, setAttributes } ) {
                     type: 'snackbar',
                 } );
                 setAttributes( { apiKey: apiKey } );
-                // setApiKey( apiKeyState );
             } else {
                 // If the response is not successful, throw an error.
                 const error = await response.json();
