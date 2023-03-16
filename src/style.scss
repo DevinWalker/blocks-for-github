@@ -250,7 +250,7 @@ $font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, s
         }
 
         .bfg-top-repo-pill {
-            color: #57606A;
+            color: $text-gray;
             border-radius: 1rem;
             padding: 0 0.6rem;
             font-size: 0.9rem;
@@ -270,7 +270,7 @@ $font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, s
             }
 
             svg {
-                fill: #57606A
+                fill: $text-gray
             }
         }
 
@@ -322,6 +322,8 @@ $font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, s
 
         .bfg-repo-byline {
             font-style: italic;
+            display: block;
+            margin: 0 0 15px;
         }
 
     }
@@ -343,6 +345,26 @@ $font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, s
 
 
 
+}
+
+.bfg-tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start; /* Distribute the items with space between */
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    gap: 10px; /* Add 10px space between items */
+
+    li {
+        list-style: none;
+        border-radius: 24px;
+        padding:2px 8px;
+        font-size: 13px;
+        background-color: #ddf4ff;
+        color: $text-gray;
+
+    }
 }
 
 

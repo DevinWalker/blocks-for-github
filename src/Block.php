@@ -124,7 +124,13 @@ class Block
                                 esc_html_e($data->name); ?></a>
                         </h3>
                         <span class="bfg-repo-byline"><?php
-                            echo esc_html__('By', 'blocks-for-github') . ' ' . esc_html__($data->organization->login); ?></span>
+                            esc_html_e('By', 'blocks-for-github'); ?>
+                            <a href="<?php
+                            esc_html_e($data->owner->html_url); ?>" target="_blank" rel="noopener noreferrer">
+                             <?php
+                             esc_html_e($data->organization->login); ?>
+                            </a>
+                           </span>
                     </div>
                     <div class="bfg-repo-follow-wrap">
                         <a href="<?php
@@ -148,6 +154,21 @@ class Block
                 <p class="bfg-repo-description"><?php
                     esc_html_e($data->description); ?></p>
             </div>
+
+            <?php
+            if ( ! empty($data->topics)): ?>
+                <ul class="bfg-tag-list">
+                    <?php
+                    // loop through and output html
+                    foreach ($data->topics as $topic) : ?>
+                        <li class="bfg-tag-list--item bfg-top-repo-pill bfg-top-repo-pill--blue"><?php
+                            esc_html_e($topic); ?></li>
+                    <?php
+                    endforeach;
+                    ?>
+                </ul>
+            <?php
+            endif; ?>
 
             <ul class="bfg-meta-list">
                 <li class="bfg-meta-list--updated"><?php
