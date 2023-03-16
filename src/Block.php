@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace GitHubBlock;
@@ -8,16 +7,11 @@ use DateTime;
 
 class Block
 {
-
-
     public array $attributes;
     private string $accessToken;
     private string $transientKey;
     private $transient;
 
-    /**
-     * @param array $attributes
-     */
     public function __construct(array $attributes)
     {
         $this->attributes   = $attributes;
@@ -31,11 +25,6 @@ class Block
         return $this->accessToken = get_option('blocks_for_github_plugin_personal_token', $this->attributes['apiKey']);
     }
 
-    /**
-     * Set transient key based on the individual blocks
-     *
-     * @return string
-     */
     protected function getTransientKey()
     {
         return "blocks_for_github_";
@@ -51,14 +40,12 @@ class Block
         ];
     }
 
-    /**
-     * Fetch events
-     */
-    protected function fetchProfile()
+    protected function fetchData(string $url, string $keySuffix = '')
     {
-        $data = get_transient($this->transientKey . $this->attributes['profileName']);
+        $key = $this->transientKey . $keySuffix;
+        $data = get_transient($key);
+
         if (empty($data)) {
-            $url     = "https://api.github.com/users/{$this->attributes['profileName']}";
             $request = wp_remote_get($url, $this->getHeaders());
 
             if (is_wp_error($request)) {
@@ -70,89 +57,47 @@ class Block
 
             $body = wp_remote_retrieve_body($request);
             $data = json_decode($body);
-            set_transient($this->transientKey . $this->attributes['profileName'], $data, 24 * HOUR_IN_SECONDS);
+            set_transient($key, $data, 24 * HOUR_IN_SECONDS);
         }
 
         return $data;
     }
 
+    protected function fetchProfile()
+    {
+        $url = "https://api.github.com/users/{$this->attributes['profileName']}";
+
+        return $this->fetchData($url, $this->attributes['profileName']);
+    }
 
     protected function fetchProfileRepos()
     {
-        $data = get_transient($this->transientKey . $this->attributes['profileName'] . '_repos');
-        if (empty($data)) {
-            // 🔎 Get profile's repo data
-            $reposUrl = add_query_arg([
-                'q'        => 'user:' . $this->attributes['profileName'],
-                'stars'    => '>0',
-                'type'     => 'Repositories',
-                'per_page' => 5,
-            ], 'https://api.github.com/search/repositories');
+        $reposUrl = add_query_arg([
+            'q'        => 'user:' . $this->attributes['profileName'],
+            'stars'    => '>0',
+            'type'     => 'Repositories',
+            'per_page' => 5,
+        ], 'https://api.github.com/search/repositories');
 
-            $reposRequest = wp_remote_get($reposUrl, $this->getHeaders());
-
-            if (is_wp_error($reposRequest)) :
-                ob_start();
-                include 'views/error-wp.php';
-
-                return ob_get_clean();
-            endif;
-
-            $body = wp_remote_retrieve_body($reposRequest);
-            $data = json_decode($body);
-            set_transient($this->transientKey . $this->attributes['profileName'] . '_repos', $data, 24 * HOUR_IN_SECONDS);
-
-        }
-        return $data;
+        return $this->fetchData($reposUrl, $this->attributes['profileName'] . '_repos');
     }
 
     protected function fetchRepo()
     {
-        $data = get_transient($this->transientKey . $this->attributes['repoUrl']);
-        if (empty($data)) {
-            $reposRequest = wp_remote_get('https://api.github.com/repos/' . $this->attributes['repoUrl']);
+        $url = 'https://api.github.com/repos/' . $this->attributes['repoUrl'];
 
-            if (is_wp_error($reposRequest)) :
-                ob_start();
-                include 'views/error-wp.php';
-
-                return ob_get_clean();
-            endif;
-
-            $body = wp_remote_retrieve_body($reposRequest);
-            $data = json_decode($body);
-            set_transient($this->transientKey . $this->attributes['repoUrl'], $data, 24 * HOUR_IN_SECONDS);
-        }
-
-        return $data;
+        return $this->fetchData($url, $this->attributes['repoUrl']);
     }
 
-    /**
-     * 🎆 Render the block.
-     *
-     * @return false|string
-     * @throws \Exception
-     */
     public function render()
     {
         if ($this->attributes['blockType'] === 'repository') {
-            $data = $this->fetchRepo();
-
+            $data = $this->fetchData('https://api.github.com/repos/' . $this->attributes['repoUrl'], $this->attributes['repoUrl']);
             return $this->renderRepo($data);
         }
 
-
-        $data = get_transient($this->transientKey . '_' . $this->attributes['profileName']);
-
-        if (empty($data)) {
-            $data = $this->fetchProfile();
-
-            // Set transient for caching purposes.
-            set_transient($this->transientKey . '_' . $this->attributes['profileName'], $this->transient, HOUR_IN_SECONDS);
-        }
-
-
         if ($this->attributes['blockType'] === 'profile') {
+            $data = $this->fetchData("https://api.github.com/users/{$this->attributes['profileName']}", $this->attributes['profileName']);
             return $this->renderProfile($data);
         }
     }
@@ -163,9 +108,7 @@ class Block
         <div class="bfg-wrap">
             <div class="bfg-repo-header">
                 <div class="bfg-repo-avatar-wrap">
-                    <img class="bfg-avatar" src="<?php
-                    esc_html_e($data->owner->avatar_url); ?>" alt="<?php
-                    esc_html_e($data->name); ?>" class="bfg-avatar-url" />
+                    <img class="bfg-avatar" src="<?php esc_html_e($data->owner->avatar_url); ?>" alt="<?php esc_html_e($data->name); ?>" />
                 </div>
 
                 <div class="bfg-repo-content">
