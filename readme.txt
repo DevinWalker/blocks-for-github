@@ -1,6 +1,6 @@
 === Blocks for GitHub ===
 Contributors:      dlocc
-Tags:              github, github block, block github, gist
+Tags:              github, github block, block github, github blocks, blocks github, github gists, github gist, github profile, github organization, github repositories
 Tested up to:      6.2
 Stable tag:        1.0.0
 License:           GPL-2.0-or-later
