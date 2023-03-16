@@ -306,6 +306,7 @@ $font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, s
 
     .bfg-repo-header {
         display: flex;
+        flex-wrap: wrap;
         justify-content: space-between;
         margin: 0 0 28px;
 
