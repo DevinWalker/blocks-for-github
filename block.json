@@ -29,7 +29,7 @@
     },
     "repoUrl": {
       "type": "string",
-      "default": "impress-org/givewp"
+      "default": "DevinWalker/blocks-for-github"
     },
     "mediaId": {
       "type": "integer",
@@ -38,6 +38,26 @@
     "mediaUrl": {
       "type": "string",
       "default": ""
+    },
+    "showTags": {
+      "type": "boolean",
+      "default": true
+    },
+    "showForks": {
+      "type": "boolean",
+      "default": true
+    },
+    "showSubscribers": {
+      "type": "boolean",
+      "default": true
+    },
+    "showOpenIssues": {
+      "type": "boolean",
+      "default": true
+    },
+    "showLastUpdate": {
+      "type": "boolean",
+      "default": true
     },
     "showBio": {
       "type": "boolean",

@@ -30,6 +30,11 @@ export default function Edit( { attributes, setAttributes } ) {
         apiKey,
         profileName,
         repoUrl,
+        showTags,
+        showForks,
+        showSubscribers,
+        showOpenIssues,
+        showLastUpdate,
         showBio,
         showLocation,
         showOrg,
@@ -157,6 +162,51 @@ export default function Edit( { attributes, setAttributes } ) {
                                     help={__( 'Please enter the URL contents after the `https://github.com/` string. For example: `impress-org/givewp`.', 'blocks-for-github' )}
                                     onChange={( newRepoUrl ) => {
                                         setAttributes( { repoUrl: newRepoUrl } );
+                                    }}
+                                />
+                            </PanelRow>
+                            <PanelRow>
+                                <CheckboxControl
+                                    label={__( 'Show tags', 'blocks-for-github' )}
+                                    checked={showTags}
+                                    onChange={( newShowTags ) => {
+                                        setAttributes( { showTags: newShowTags } );
+                                    }}
+                                />
+                            </PanelRow>
+                            <PanelRow>
+                                <CheckboxControl
+                                    label={__( 'Show forks', 'blocks-for-github' )}
+                                    checked={showForks}
+                                    onChange={( newShowForks ) => {
+                                        setAttributes( { showForks: newShowForks } );
+                                    }}
+                                />
+                            </PanelRow>
+                            <PanelRow>
+                                <CheckboxControl
+                                    label={__( 'Show subscribers', 'blocks-for-github' )}
+                                    checked={showSubscribers}
+                                    onChange={( newShowSubsribers ) => {
+                                        setAttributes( { showSubscribers: newShowSubsribers } );
+                                    }}
+                                />
+                            </PanelRow>
+                            <PanelRow>
+                                <CheckboxControl
+                                    label={__( 'Show open issues', 'blocks-for-github' )}
+                                    checked={showOpenIssues}
+                                    onChange={( newShowOpenIssues ) => {
+                                        setAttributes( { showOpenIssues: newShowOpenIssues } );
+                                    }}
+                                />
+                            </PanelRow>
+                            <PanelRow>
+                                <CheckboxControl
+                                    label={__( 'Show last update', 'blocks-for-github' )}
+                                    checked={showLastUpdate}
+                                    onChange={( newShowLastUpdate ) => {
+                                        setAttributes( { showLastUpdate: newShowLastUpdate } );
                                     }}
                                 />
                             </PanelRow>
@@ -348,6 +398,11 @@ export default function Edit( { attributes, setAttributes } ) {
                                 repoUrl: attributes.repoUrl,
                                 mediaId: attributes.mediaId,
                                 mediaUrl: attributes.mediaUrl,
+                                showTags: attributes.showTags,
+                                showForks: attributes.showForks,
+                                showSubscribers: attributes.showSubscribers,
+                                showOpenIssues: attributes.showOpenIssues,
+                                showLastUpdate: attributes.showLastUpdate,
                                 showBio: attributes.showBio,
                                 showLocation: attributes.showLocation,
                                 showOrg: attributes.showOrg,

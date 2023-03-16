@@ -64,13 +64,6 @@ class Block
         return $data;
     }
 
-    protected function fetchProfile()
-    {
-        $url = "https://api.github.com/users/{$this->attributes['profileName']}";
-
-        return $this->fetchData($url, $this->attributes['profileName']);
-    }
-
     protected function fetchProfileRepos()
     {
         $reposUrl = add_query_arg([
@@ -81,13 +74,6 @@ class Block
         ], 'https://api.github.com/search/repositories');
 
         return $this->fetchData($reposUrl, $this->attributes['profileName'] . '_repos');
-    }
-
-    protected function fetchRepo()
-    {
-        $url = 'https://api.github.com/repos/' . $this->attributes['repoUrl'];
-
-        return $this->fetchData($url, $this->attributes['repoUrl']);
     }
 
     public function render()
@@ -105,6 +91,9 @@ class Block
         }
     }
 
+    /**
+     * @throws \Exception
+     */
     public function renderRepo($data)
     {
         ob_start(); ?>
@@ -128,7 +117,7 @@ class Block
                             <a href="<?php
                             esc_html_e($data->owner->html_url); ?>" target="_blank" rel="noopener noreferrer">
                              <?php
-                             esc_html_e($data->organization->login); ?>
+                             esc_html_e($data->owner->login); ?>
                             </a>
                            </span>
                     </div>
@@ -150,13 +139,17 @@ class Block
                 </div>
             </div>
 
-            <div class="bfg-repo-description-wrap">
-                <p class="bfg-repo-description"><?php
-                    esc_html_e($data->description); ?></p>
-            </div>
+            <?php
+            if ( ! empty($data->description)) : ?>
+                <div class="bfg-repo-description-wrap">
+                    <p class="bfg-repo-description"><?php
+                        esc_html_e($data->description); ?></p>
+                </div>
+            <?php
+            endif; ?>
 
             <?php
-            if ( ! empty($data->topics)): ?>
+            if ( ! empty($data->topics) && $this->attributes['showTags']): ?>
                 <ul class="bfg-tag-list">
                     <?php
                     // loop through and output html
@@ -171,23 +164,41 @@ class Block
             endif; ?>
 
             <ul class="bfg-meta-list">
-                <li class="bfg-meta-list--updated"><?php
-                    // Last update:
-                    $dateTime      = new DateTime($data->updated_at);
-                    $formattedDate = $dateTime->format('m-d-Y');
-                    echo file_get_contents(BLOCKS_FOR_GITHUB_DIR . '/assets/images/calendar.svg');
-                    echo esc_html__('Last Update', 'blocks-for-github') . ' ' . $formattedDate; ?></li>
-                <li class="bfg-meta-list--issues"><?php
-                    // Open issues:
-                    echo file_get_contents(BLOCKS_FOR_GITHUB_DIR . '/assets/images/flag.svg');
-                    echo esc_html__('Open Issues', 'blocks-for-github') . ' ' . esc_html__(number_format_i18n($data->open_issues)); ?></li>
-                <li class="bfg-meta-list--subscribers"><?php
-                    // Subscribers
-                    echo file_get_contents(BLOCKS_FOR_GITHUB_DIR . '/assets/images/mark-github.svg');
-                    echo esc_html__('Subscribers', 'blocks-for-github') . ' ' . esc_html__(number_format_i18n($data->subscribers_count)); ?></li>
-                <li class="bfg-meta-list--forks"><?php
-                    echo file_get_contents(BLOCKS_FOR_GITHUB_DIR . '/assets/images/fork.svg');
-                    echo esc_html__('Forks', 'blocks-for-github') . ' ' . esc_html__(number_format_i18n($data->forks)); ?></li>
+                <?php
+                if ( ! empty($data->updated_at) && $this->attributes['showLastUpdate']): ?>
+                    <li class="bfg-meta-list--updated"><?php
+                        // Last update:
+                        $dateTime      = new DateTime($data->updated_at);
+                        $formattedDate = $dateTime->format('m-d-Y');
+                        echo file_get_contents(BLOCKS_FOR_GITHUB_DIR . '/assets/images/calendar.svg');
+                        echo esc_html__('Last Update', 'blocks-for-github') . ' ' . $formattedDate; ?></li>
+                <?php
+                endif; ?>
+                <?php
+                if ( ! empty($data->open_issues) && $this->attributes['showOpenIssues']): ?>
+                    <li class="bfg-meta-list--issues"><?php
+                        // Open issues:
+                        echo file_get_contents(BLOCKS_FOR_GITHUB_DIR . '/assets/images/flag.svg');
+                        echo esc_html__('Open Issues', 'blocks-for-github') . ' ' . esc_html__(number_format_i18n($data->open_issues)); ?></li>
+                <?php
+                endif; ?>
+                <?php
+                if ( ! empty($data->subscribers_count) && $this->attributes['showSubscribers']): ?>
+                    <li class="bfg-meta-list--subscribers"><?php
+                        // Subscribers
+                        echo file_get_contents(BLOCKS_FOR_GITHUB_DIR . '/assets/images/mark-github.svg');
+                        echo esc_html__('Subscribers', 'blocks-for-github') . ' ' . esc_html__(number_format_i18n($data->subscribers_count)); ?></li>
+                <?php
+                endif; ?>
+                <?php
+                if ( ! empty($data->forks) && $this->attributes['showForks']): ?>
+                    <li class="bfg-meta-list--forks"><?php
+                        echo file_get_contents(BLOCKS_FOR_GITHUB_DIR . '/assets/images/fork.svg');
+                        echo esc_html__('Forks', 'blocks-for-github') . ' ' . esc_html__(number_format_i18n($data->forks)); ?></li>
+                <?php
+                endif; ?>
+
+
             </ul>
         </div>
         <?php
