@@ -378,17 +378,17 @@ export default function Edit( { attributes, setAttributes } ) {
                         </div>
                     }
 
-                    {(apiKey === '' || apiKey === undefined) &&
-                        <div id="bfg-info-wrap">
-                            <div className="bfg-info-wrap-inner">
-                                <span className="bfg-info-emoji">👋</span>
-                                <h2>{__( 'Welcome to Blocks for GitHub!', 'blocks-for-github' )}</h2>
-                                <p>{__( 'To begin, please enter your GitHub personal access token in the block\'s setting panel to the right. Don\'t worry, you\'ll only have to do this one time.', 'blocks-for-github' )}</p>
-                            </div>
-                        </div>
-                    }
+                    {/*{(apiKey === '' || apiKey === undefined) &&*/}
+                    {/*    <div id="bfg-info-wrap">*/}
+                    {/*        <div className="bfg-info-wrap-inner">*/}
+                    {/*            <span className="bfg-info-emoji">👋</span>*/}
+                    {/*            <h2>{__( 'Welcome to Blocks for GitHub!', 'blocks-for-github' )}</h2>*/}
+                    {/*            <p>{__( 'To begin, please enter your GitHub personal access token in the block\'s setting panel to the right. Don\'t worry, you\'ll only have to do this one time.', 'blocks-for-github' )}</p>*/}
+                    {/*        </div>*/}
+                    {/*    </div>*/}
+                    {/*}*/}
 
-                    {(apiKey !== '' && apiKey !== undefined && !apiKeyLoading) && (
+                    {/*{(apiKey !== '' && apiKey !== undefined && !apiKeyLoading) && (*/}
                         <ServerSideRender
                             block="blocks-for-github/block"
                             attributes={{
@@ -410,7 +410,7 @@ export default function Edit( { attributes, setAttributes } ) {
                                 showTwitter: attributes.showTwitter,
                             }}
                         />
-                    )}
+                    {/*)}*/}
                 </div>
             </Fragment>
         </Fragment>

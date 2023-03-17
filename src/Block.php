@@ -43,22 +43,42 @@ class Block
 
     protected function fetchData(string $url, string $keySuffix = '')
     {
-        $key  = $this->transientKey . $keySuffix;
-        $data = get_transient($key);
+        $key = $this->transientKey . $keySuffix;
+        //        $data = get_transient($key);
+        $data = '';
 
         if (empty($data)) {
-            $request = wp_remote_get($url, $this->getHeaders());
+            $response = wp_remote_get($url);
 
-            if (is_wp_error($request)) {
+            if (is_wp_error($response)) {
                 ob_start();
                 include 'src/views/error-wp.php';
 
                 return ob_get_clean();
             }
 
-            $body = wp_remote_retrieve_body($request);
-            $data = json_decode($body);
-            set_transient($key, $data, 24 * HOUR_IN_SECONDS);
+            $http_code = wp_remote_retrieve_response_code($response);
+
+            // Ensure no API errors.
+            if ($http_code >= 400) {
+                // Delete the transient if an error occurred.
+                delete_transient($key);
+
+                // Parse the error message from the response body.
+                $response_body = wp_remote_retrieve_body($response);
+                $error_message = __('Unknown error occurred', 'blocks-for-github');
+                if ( ! empty($response_body)) {
+                    $response_data = json_decode($response_body);
+                    $error_message = $response_data->message ?? $response_body;
+                }
+
+                return "API error occurred: $error_message";
+            } else {
+                // API request went through, so we can save the data.
+                $body = wp_remote_retrieve_body($response);
+                $data = json_decode($body);
+                set_transient($key, $data, 24 * HOUR_IN_SECONDS);
+            }
         }
 
         return $data;
@@ -68,7 +88,7 @@ class Block
     {
         $reposUrl = add_query_arg([
             'q'        => 'user:' . $this->attributes['profileName'],
-            'stars'    => '>0',
+            'stars'    => '>=0',
             'type'     => 'Repositories',
             'per_page' => 5,
         ], 'https://api.github.com/search/repositories');
@@ -76,19 +96,45 @@ class Block
         return $this->fetchData($reposUrl, $this->attributes['profileName'] . '_repos');
     }
 
+    /**
+     * @throws \Exception
+     */
     public function render()
     {
         if ($this->attributes['blockType'] === 'repository') {
             $data = $this->fetchData('https://api.github.com/repos/' . $this->attributes['repoUrl'], $this->attributes['repoUrl']);
 
-            return $this->renderRepo($data);
+            return $this->getOutputOrError($data, $this->renderRepo($data));
         }
 
         if ($this->attributes['blockType'] === 'profile') {
             $data = $this->fetchData("https://api.github.com/users/{$this->attributes['profileName']}", $this->attributes['profileName']);
 
-            return $this->renderProfile($data);
+            return $this->getOutputOrError($data, $this->renderProfile($data));
         }
+    }
+
+    protected function getOutputOrError($data, $output)
+    {
+        if (strpos($data, 'error')) {
+            // Output error message if an error occurred during the API request.
+            ob_start(); ?>
+            <div id="bfg-info-wrap">
+                <div class="bfg-error-wrap">
+                    <span class="bfg-info-emoji">👾</span>
+                    <h2><?php esc_html_e('GitHub API Error', 'blocks-for-github'); ?></h2>
+                    <p><?php esc_html_e('Hmm, GitHub returned a not found error.', 'blocks-for-github'); ?></p>
+                    <div class="bfg-error">
+                        <?php esc_html_e($data); ?>
+                    </div>
+                </div>
+            </div>
+
+            <?php
+            return ob_get_clean();
+        }
+
+        return $output;
     }
 
     /**
@@ -101,39 +147,26 @@ class Block
 
             <div class="bfg-repo-header bfg-grid-container">
                 <div class="bfg-repo-avatar-wrap">
-                    <img class="bfg-avatar" src="<?php
-                    esc_html_e($data->owner->avatar_url); ?>" alt="<?php
-                    esc_html_e($data->name); ?>" />
+                    <img class="bfg-avatar" src="<?php esc_html_e($data->owner->avatar_url); ?>" alt="<?php esc_html_e($data->name); ?>" />
                 </div>
                 <div class="bfg-repo-content">
                     <div class="bfg-repo-name-wrap">
                         <h3 class="bfg-repo-name">
-                            <a href="<?php
-                            esc_html_e($data->html_url); ?>" target="_blank" rel="noopener noreferrer"><?php
-                                esc_html_e($data->name); ?></a>
+                            <a href="<?php esc_html_e($data->html_url); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e($data->name); ?></a>
                         </h3>
-                        <span class="bfg-repo-byline"><?php
-                            esc_html_e('By', 'blocks-for-github'); ?>
-                            <a href="<?php
-                            esc_html_e($data->owner->html_url); ?>" target="_blank" rel="noopener noreferrer">
-                             <?php
-                             esc_html_e($data->owner->login); ?>
-                            </a>
+                        <span class="bfg-repo-byline"><?php esc_html_e('By', 'blocks-for-github'); ?>
+                            <a href="<?php esc_html_e($data->owner->html_url); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e($data->owner->login); ?></a>
                            </span>
                     </div>
                     <div class="bfg-repo-follow-wrap">
-                        <a href="<?php
-                        esc_html_e($data->html_url); ?>" class="bfg-follow-me" target="_blank">
+                        <a href="<?php esc_html_e($data->html_url); ?>" class="bfg-follow-me" target="_blank">
                             <span class="bfg-follow-me__inner">
                                     <span class="bfg-follow-me__inner--svg">
-                                      <?php
-                                      echo file_get_contents(BLOCKS_FOR_GITHUB_DIR . '/assets/images/star-filled.svg'); ?>
+                                      <?php echo file_get_contents(BLOCKS_FOR_GITHUB_DIR . '/assets/images/star-filled.svg'); ?>
                                     </span>
-                                <?php
-                                esc_html_e('Star', 'blocks-for-github'); ?>
+                                <?php esc_html_e('Star', 'blocks-for-github'); ?>
                               </span>
-                            <span class="bfg-follow-me__count"><?php
-                                esc_html_e(number_format_i18n($data->stargazers_count)); ?></span>
+                            <span class="bfg-follow-me__count"><?php esc_html_e(number_format_i18n($data->stargazers_count)); ?></span>
                         </a>
                     </div>
                 </div>
@@ -142,11 +175,9 @@ class Block
             <?php
             if ( ! empty($data->description)) : ?>
                 <div class="bfg-repo-description-wrap">
-                    <p class="bfg-repo-description"><?php
-                        esc_html_e($data->description); ?></p>
+                    <p class="bfg-repo-description"><?php esc_html_e($data->description); ?></p>
                 </div>
-            <?php
-            endif; ?>
+            <?php endif; ?>
 
             <?php
             if ( ! empty($data->topics) && $this->attributes['showTags']): ?>
@@ -197,8 +228,6 @@ class Block
                         echo esc_html__('Forks', 'blocks-for-github') . ' ' . esc_html__(number_format_i18n($data->forks)); ?></li>
                 <?php
                 endif; ?>
-
-
             </ul>
         </div>
         <?php
@@ -352,8 +381,6 @@ class Block
                 <?php
                 endif; ?>
             </div>
-
-
         </div>
 
         <?php
