@@ -119,8 +119,8 @@ class Block
         if (strpos($data, 'error')) {
             // Output error message if an error occurred during the API request.
             ob_start(); ?>
-            <div id="bfg-info-wrap">
-                <div class="bfg-error-wrap">
+            <div class="bfg-notice-wrap">
+                <div class="bfg-notice-inner">
                     <span class="bfg-info-emoji">👾</span>
                     <h2><?php esc_html_e('GitHub API Error', 'blocks-for-github'); ?></h2>
                     <p><?php esc_html_e('Hmm, GitHub returned a not found error.', 'blocks-for-github'); ?></p>
