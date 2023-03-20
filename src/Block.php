@@ -43,18 +43,22 @@ class Block
 
     protected function fetchData(string $url, string $keySuffix = '')
     {
-        $key = $this->transientKey . $keySuffix;
-        //        $data = get_transient($key);
-        $data = '';
+        $key  = $this->transientKey . $keySuffix;
+        $data = get_transient($key);
 
         if (empty($data)) {
             $response = wp_remote_get($url);
 
             if (is_wp_error($response)) {
-                ob_start();
-                include 'src/views/error-wp.php';
-
-                return ob_get_clean();
+                ob_start(); ?>
+                <div class="bfg-notice-wrap">
+                    <div class="bfg-notice-inner">
+                        <span class="bfg-info-emoji">🤷‍</span>
+                        <h2><?php esc_html_e( 'WP Error', 'blocks-for-github' ); ?></h2>
+                        <p><?php esc_html_e( 'A WordPress error occurred when trying to remotely call the GitHub API.', 'blocks-for-github' ); ?></p>
+                    </div>
+                </div
+                <?php return ob_get_clean();
             }
 
             $http_code = wp_remote_retrieve_response_code($response);
@@ -116,7 +120,7 @@ class Block
 
     protected function getOutputOrError($data, $output)
     {
-        if (strpos($data, 'error')) {
+        if (is_string($data) && strpos($data, 'error')) {
             // Output error message if an error occurred during the API request.
             ob_start(); ?>
             <div class="bfg-notice-wrap">
@@ -196,7 +200,7 @@ class Block
 
             <ul class="bfg-meta-list">
                 <?php
-                if ( ! empty($data->updated_at) && $this->attributes['showLastUpdate']): ?>
+                if (isset($data->updated_at) && $this->attributes['showLastUpdate']): ?>
                     <li class="bfg-meta-list--updated"><?php
                         // Last update:
                         $dateTime      = new DateTime($data->updated_at);
@@ -206,7 +210,7 @@ class Block
                 <?php
                 endif; ?>
                 <?php
-                if ( ! empty($data->open_issues) && $this->attributes['showOpenIssues']): ?>
+                if (isset($data->open_issues) && $this->attributes['showOpenIssues']): ?>
                     <li class="bfg-meta-list--issues"><?php
                         // Open issues:
                         echo file_get_contents(BLOCKS_FOR_GITHUB_DIR . '/assets/images/flag.svg');
@@ -214,7 +218,7 @@ class Block
                 <?php
                 endif; ?>
                 <?php
-                if ( ! empty($data->subscribers_count) && $this->attributes['showSubscribers']): ?>
+                if (isset($data->subscribers_count) && $this->attributes['showSubscribers']): ?>
                     <li class="bfg-meta-list--subscribers"><?php
                         // Subscribers
                         echo file_get_contents(BLOCKS_FOR_GITHUB_DIR . '/assets/images/mark-github.svg');
@@ -222,7 +226,7 @@ class Block
                 <?php
                 endif; ?>
                 <?php
-                if ( ! empty($data->forks) && $this->attributes['showForks']): ?>
+                if (isset($data->forks) && $this->attributes['showForks']): ?>
                     <li class="bfg-meta-list--forks"><?php
                         echo file_get_contents(BLOCKS_FOR_GITHUB_DIR . '/assets/images/fork.svg');
                         echo esc_html__('Forks', 'blocks-for-github') . ' ' . esc_html__(number_format_i18n($data->forks)); ?></li>
