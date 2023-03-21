@@ -141,11 +141,11 @@ export default function Edit( { attributes, setAttributes } ) {
                         <PanelRow>
                             <RadioControl
                                 label={__( 'Display Options', 'blocks-for-github' )}
-                                help={__( 'This option adjusts the content displayed in the block. Some views require an API key to display.', 'blocks-for-github' )}
+                                help={__( 'This option adjusts the content displayed in the block.', 'blocks-for-github' )}
                                 selected={blockType}
                                 options={[
                                     { label: 'Repository', value: 'repository' },
-                                    { label: 'Profile (API Key Required)', value: 'profile' },
+                                    { label: 'Profile', value: 'profile' },
                                 ]}
                                 onChange={( newBlockType ) => {
                                     setAttributes( { blockType: newBlockType } );

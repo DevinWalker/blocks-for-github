@@ -54,8 +54,8 @@ class Block
                 <div class="bfg-notice-wrap">
                     <div class="bfg-notice-inner">
                         <span class="bfg-info-emoji">🤷‍</span>
-                        <h2><?php esc_html_e( 'WP Error', 'blocks-for-github' ); ?></h2>
-                        <p><?php esc_html_e( 'A WordPress error occurred when trying to remotely call the GitHub API.', 'blocks-for-github' ); ?></p>
+                        <h2><?php esc_html_e('WP Error', 'blocks-for-github'); ?></h2>
+                        <p><?php esc_html_e('A WordPress error occurred when trying to remotely call the GitHub API.', 'blocks-for-github'); ?></p>
                     </div>
                 </div
                 <?php return ob_get_clean();
@@ -147,8 +147,7 @@ class Block
     public function renderRepo($data)
     {
         ob_start(); ?>
-        <div class="bfg-wrap">
-
+        <div class="bfg-wrap bfg-repo" id="bfg-wrap-<?php esc_html_e($data->id); ?>">
             <div class="bfg-repo-header bfg-grid-container">
                 <div class="bfg-repo-avatar-wrap">
                     <img class="bfg-avatar" src="<?php esc_html_e($data->owner->avatar_url); ?>" alt="<?php esc_html_e($data->name); ?>" />
@@ -251,139 +250,97 @@ class Block
 
         ob_start(); ?>
 
-        <div class="bfg-wrap" id="bfg-profile-wrap-<?php
-        esc_html_e($data->id); ?>">
+        <div class="bfg-wrap" id="bfg-wrap-<?php esc_html_e($data->id); ?>">
             <div class="bfg-header" style="<?php
             echo ! empty($this->attributes['mediaUrl']) ? 'background-image: url(' . $this->attributes['mediaUrl'] . ')' : 'background-image: url(' . BLOCKS_FOR_GITHUB_URL . 'assets/images/code-placeholder.jpg)'; ?>">
                 <div class="bfg-avatar">
-                    <img src="<?php
-                    esc_html_e($data->avatar_url); ?>" alt="<?php
-                    esc_html_e($data->name); ?>" class="bfg-avatar-url" />
+                    <img src="<?php esc_html_e($data->avatar_url); ?>" alt="<?php esc_html_e($data->name); ?>" class="bfg-avatar-url" />
                 </div>
             </div>
 
             <div class="bfg-subheader-content">
-                <h3 class="bfg-profile-name"><?php
-                    esc_html_e($data->name); ?></h3>
-                <a href="<?php
-                esc_html_e($data->html_url); ?>" class="bfg-follow-me" target="_blank">
+                <h3 class="bfg-profile-name"><?php esc_html_e($data->name); ?></h3>
+                <a href="<?php esc_html_e($data->html_url); ?>" class="bfg-follow-me" target="_blank">
                     <span class="bfg-follow-me__inner">
                             <span class="bfg-follow-me__inner--svg">
-                              <?php
-                              echo file_get_contents(BLOCKS_FOR_GITHUB_DIR . '/assets/images/mark-github.svg'); ?>
+                              <?php echo file_get_contents(BLOCKS_FOR_GITHUB_DIR . '/assets/images/mark-github.svg'); ?>
                             </span>
-                        <?php
-                        esc_html_e('Follow', 'blocks-for-github'); ?>
-                        <?php
-                        esc_html_e($data->login); ?>
+                        <?php esc_html_e('Follow', 'blocks-for-github'); ?>
+                        <?php esc_html_e($data->login); ?>
                       </span>
-                    <span class="bfg-follow-me__count"><?php
-                        esc_html_e(number_format_i18n($data->followers)); ?></span>
+                    <span class="bfg-follow-me__count"><?php esc_html_e(number_format_i18n($data->followers)); ?></span>
                 </a>
             </div>
 
-            <?php
-            if ( ! empty($data->bio) && $this->attributes['showBio']) : ?>
+            <?php if ( ! empty($data->bio) && $this->attributes['showBio']) : ?>
                 <div class="bfg-bio-wrap">
-                    <p><?php
-                        esc_html_e($data->bio); ?></p>
+                    <p><?php esc_html_e($data->bio); ?></p>
                 </div>
-            <?php
-            endif; ?>
+            <?php endif; ?>
 
             <?php
             // 🙉 Show meta list only if one or more fields are selected.
             if ( ! empty($this->attributes['showOrg']) || ! empty($this->attributes['showLocation']) || ! empty($this->attributes['showWebsite']) || ! empty($this->attributes['showTwitter'])): ?>
                 <ul class="bfg-meta-list">
-                    <?php
-                    if ( ! empty($data->location) && $this->attributes['showLocation']) : ?>
+                    <?php if ( ! empty($data->location) && $this->attributes['showLocation']) : ?>
                         <li class="bfg-meta-list--location">
-                            <a href="https://www.google.com/maps/search/?api=1&query=<?php
-                            echo urlencode($data->location); ?>" target="_blank"><?php
-                                echo file_get_contents(BLOCKS_FOR_GITHUB_DIR . '/assets/images/location.svg'); ?><?php
-                                esc_html_e($data->location); ?></a>
+                            <a href="https://www.google.com/maps/search/?api=1&query=<?php echo urlencode($data->location); ?>" target="_blank"><?php echo file_get_contents(
+                                    BLOCKS_FOR_GITHUB_DIR . '/assets/images/location.svg'
+                                ); ?><?php esc_html_e($data->location); ?></a>
                         </li>
-                    <?php
-                    endif; ?>
-                    <?php
-                    if ( ! empty($data->company) && $this->attributes['showOrg']) : ?>
+                    <?php endif; ?>
+                    <?php if ( ! empty($data->company) && $this->attributes['showOrg']) : ?>
                         <li class="bfg-meta-list--company">
-                            <?php
-                            echo file_get_contents(BLOCKS_FOR_GITHUB_DIR . '/assets/images/building.svg'); ?><?php
-                            esc_html_e($data->company); ?>
+                            <?php echo file_get_contents(BLOCKS_FOR_GITHUB_DIR . '/assets/images/building.svg'); ?><?php esc_html_e($data->company); ?>
                         </li>
-                    <?php
-                    endif; ?>
-                    <?php
-                    if ( ! empty($data->blog) && $this->attributes['showWebsite']) : ?>
+                    <?php endif; ?>
+                    <?php if ( ! empty($data->blog) && $this->attributes['showWebsite']) : ?>
                         <li class="bfg-meta-list--website">
-                            <a href="<?php
-                            esc_html_e($data->blog); ?>" target="_blank"><?php
-                                echo file_get_contents(BLOCKS_FOR_GITHUB_DIR . '/assets/images/link.svg'); ?>
-                                <?php
-                                esc_html_e($data->blog); ?></a>
+                            <a href="<?php esc_html_e($data->blog); ?>" target="_blank"><?php echo file_get_contents(BLOCKS_FOR_GITHUB_DIR . '/assets/images/link.svg'); ?>
+                                <?php esc_html_e($data->blog); ?></a>
                         </li>
-                    <?php
-                    endif; ?>
-                    <?php
-                    if ( ! empty($data->twitter_username) && $this->attributes['showTwitter']) : ?>
+                    <?php endif; ?>
+                    <?php if ( ! empty($data->twitter_username) && $this->attributes['showTwitter']) : ?>
                         <li class="bfg-meta-list--twitter">
-                            <a href="https://twitter.com/<?php
-                            esc_html_e($data->twitter_username); ?>" target="_blank"><?php
-                                echo file_get_contents(BLOCKS_FOR_GITHUB_DIR . '/assets/images/twitter.svg'); ?>
-                                <?php
-                                echo '@' . esc_html__($data->twitter_username); ?></a>
+                            <a href="https://twitter.com/<?php esc_html_e($data->twitter_username); ?>" target="_blank"><?php echo file_get_contents(
+                                    BLOCKS_FOR_GITHUB_DIR . '/assets/images/twitter.svg'
+                                ); ?><?php echo '@' . esc_html__($data->twitter_username); ?></a>
                         </li>
-                    <?php
-                    endif; ?>
+                    <?php endif; ?>
                 </ul>
-            <?php
-            endif; ?>
+            <?php endif; ?>
 
             <div class="bfg-bottom-wrap">
-                <?php
-                if ($reposData->items) : ?>
+                <?php if ($reposData->items) : ?>
                     <ol class="bfg-github-list">
-                        <?php
-                        foreach ($reposData->items as $repo) : ?>
+                        <?php foreach ($reposData->items as $repo) : ?>
                             <li class="bgf-top-repo">
                                 <div class="bfg-top-repo__top">
-                                    <a href="<?php
-                                    echo $repo->html_url; ?>" class="bfg-top-repo__link" target="_blank"><?php
-                                        echo $repo->name; ?></a>
+                                    <a href="<?php echo $repo->html_url; ?>" class="bfg-top-repo__link" target="_blank"><?php echo $repo->name; ?></a>
                                     <div class="bfg-top-repo-pill-wrap">
-                                        <?php
-                                        if ($repo->archived) : ?>
-                                            <span class="bfg-top-repo-pill bfg-top-repo-pill--purple"><?php
-                                                echo file_get_contents(BLOCKS_FOR_GITHUB_DIR . '/assets/images/archive.svg'); ?><?php
-                                                esc_html_e('Archived', 'blocks-for-github');
-                                                ?></span>
-                                        <?php
-                                        endif; ?>
-                                        <span class="bfg-top-repo-pill bfg-top-repo-pill--blue"><?php
-                                            echo file_get_contents(BLOCKS_FOR_GITHUB_DIR . '/assets/images/fork.svg'); ?><?php
-                                            echo $repo->forks; ?></span>
-                                        <span class="bfg-top-repo-pill bfg-top-repo-pill--gold"><?php
-                                            echo file_get_contents(BLOCKS_FOR_GITHUB_DIR . '/assets/images/star.svg'); ?><?php
-                                            echo $repo->stargazers_count;
-                                            ?></span>
+                                        <?php if ($repo->archived) : ?>
+                                            <span class="bfg-top-repo-pill bfg-top-repo-pill--purple"><?php echo file_get_contents(
+                                                    BLOCKS_FOR_GITHUB_DIR . '/assets/images/archive.svg'
+                                                ); ?><?php esc_html_e('Archived', 'blocks-for-github'); ?></span>
+                                        <?php endif; ?>
+                                        <span class="bfg-top-repo-pill bfg-top-repo-pill--blue"><?php echo file_get_contents(
+                                                BLOCKS_FOR_GITHUB_DIR . '/assets/images/fork.svg'
+                                            ); ?><?php esc_html_e($repo->forks); ?></span>
+                                        <span class="bfg-top-repo-pill bfg-top-repo-pill--gold"><?php echo file_get_contents(
+                                                BLOCKS_FOR_GITHUB_DIR . '/assets/images/star.svg'
+                                            ); ?><?php esc_html_e($repo->stargazers_count); ?></span>
                                     </div>
                                 </div>
 
-                                <?php
-                                if ($repo->description) : ?>
+                                <?php if ($repo->description) : ?>
                                     <p class="bfg-top-repo__description">
-                                        <?php
-                                        echo $repo->description; ?>
+                                        <?php echo $repo->description; ?>
                                     </p>
-                                <?php
-                                endif; ?>
+                                <?php endif; ?>
                             </li>
-                        <?php
-                        endforeach; ?>
+                        <?php endforeach; ?>
                     </ol>
-                <?php
-                endif; ?>
+                <?php endif; ?>
             </div>
         </div>
 

@@ -6,7 +6,7 @@
   "title": "Blocks for GitHub",
   "category": "design",
   "icon": "id-alt",
-  "description": "Display your GitHub content in a variety of useful ways.",
+  "description": "Display your GitHub content in a variety of useful ways using the WordPress block editor.",
   "supports": {
     "html": false
   },
