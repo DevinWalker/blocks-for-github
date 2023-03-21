@@ -15,26 +15,11 @@ class Bootstrap
     private function registerHooks(): void
     {
         add_action('init', [$this, 'registerBlock']);
-        add_action('init', [$this, 'registerSettings']);
         add_action('admin_enqueue_scripts', [$this, 'addAdminLocalizations']);
-    }
-
-    public function registerSettings(): void
-    {
-        register_setting(
-            'blocks_for_github_plugin_settings',
-            'blocks_for_github_plugin_personal_token',
-            [
-                'default' => '',
-                'show_in_rest' => true,
-                'type' => 'string',
-            ]
-        );
     }
 
     public function registerBlock(): void
     {
-
         wp_register_script(
             BLOCKS_FOR_GITHUB_SCRIPT_NAME,
             plugins_url('build/index.js', BLOCKS_FOR_GITHUB_FILE),
@@ -50,6 +35,9 @@ class Bootstrap
         );
     }
 
+    /**
+     * @throws \Exception
+     */
     public function blockRenderCallback($attributes)
     {
         $block = new Block($attributes);

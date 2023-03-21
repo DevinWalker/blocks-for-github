@@ -27,7 +27,6 @@ import './editor.scss';
 export default function Edit( { attributes, setAttributes } ) {
     const {
         blockType,
-        apiKey,
         profileName,
         repoUrl,
         showTags,
@@ -54,7 +53,6 @@ export default function Edit( { attributes, setAttributes } ) {
         );
     }
 
-    const [apiKeyLoading, setApiKeyLoading] = useState( false );
     const [showBioChecked, setShowBio] = useState( showBio );
     const [showLocationChecked, setShowLocation] = useState( showLocation );
     const [showOrgChecked, setShowOrg] = useState( showOrg );
@@ -78,60 +76,6 @@ export default function Edit( { attributes, setAttributes } ) {
     const media = useSelect( ( select ) => {
         return select( 'core' ).getMedia( mediaId );
     }, [onSelectMedia] );
-
-    const siteSettings = useSelect( ( select ) => {
-        return select( 'core' ).getEntityRecord( 'root', 'site' );
-    }, [] );
-
-    useEffect( () => {
-        if ( siteSettings ) {
-            const {
-                blocks_for_github_plugin_personal_token: apiKeyState,
-            } = siteSettings;
-            setAttributes( { apiKey: apiKeyState } );
-        }
-    }, [siteSettings] );
-
-    const testApiKey = async() => {
-        setApiKeyLoading( true );
-
-        try {
-            // Send a request to the GitHub API with the entered API key.
-            const response = await fetch( 'https://api.github.com/user', {
-                headers: {
-                    Authorization: 'Bearer ' + apiKey
-                }
-            } );
-            if ( response.ok ) {
-                // If the response is successful, save the entered API key and display a success notice.
-                dispatch( 'core' ).saveEntityRecord( 'root', 'site', {
-                    blocks_for_github_plugin_personal_token: apiKey,
-                } );
-                dispatch( 'core/notices' ).createInfoNotice( __( '🎉 Success! You have connected to the GitHub API.', 'blocks-for-github' ), {
-                    isDismissible: true,
-                    type: 'snackbar',
-                } );
-                setAttributes( { apiKey: apiKey } );
-            } else {
-                // If the response is not successful, throw an error.
-                const error = await response.json();
-                throw new Error( error.message );
-            }
-        } catch ( error ) {
-            // If there's an error, delete the entered API key and display an error notice.
-            const errorMessage = `${__( '🙈️ GitHub API Error:', 'blocks-for-github' )} ${error.message} ${__( 'Error Code:', 'blocks-for-github' )} ${error.code}`;
-            dispatch( 'core' ).saveEntityRecord( 'root', 'site', {
-                blocks_for_github_plugin_personal_token: null,
-            } );
-            dispatch( 'core/notices' ).createInfoNotice( errorMessage, {
-                isDismissible: true,
-                type: 'snackbar',
-            } );
-        } finally {
-            // Set the loading state to false.
-            setApiKeyLoading( false );
-        }
-    };
 
     return (
         <Fragment>
@@ -327,73 +271,14 @@ export default function Edit( { attributes, setAttributes } ) {
                             </PanelRow>
                         </PanelBody>
                     )}
-                    <PanelBody title={__( 'GitHub Access Token', 'blocks-for-github' )} initialOpen={false}>
-                        <PanelRow>
-                            <TextControl
-                                label={__( 'Access Token', 'blocks-for-github' )}
-                                value={apiKey}
-                                type={'password'}
-                                help={
-                                    <>
-                                        {__( 'Please enter your personal access token to use this block. To access your GitHub personal access token', 'blocks-for-github'
-                                        )}{' '}
-                                        <a
-                                            href="https://github.com/settings/tokens"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                        >
-                                            {__(
-                                                'click here',
-                                                'blocks-for-github'
-                                            )}
-                                        </a>{'.'}
-                                    </>
-                                }
-                                onChange={( newApiKey ) => {
-                                    setAttributes( { apiKey: newApiKey } );
-                                }}
-                            />
-                        </PanelRow>
-                        <PanelRow className={'blocks-for-github-button-row'}>
-                            <Button
-                                isSecondary
-                                isBusy={apiKeyLoading}
-                                onClick={() => testApiKey( apiKey )}
-                            >
-                                {__( 'Save API Key', 'blocks-for-github' )}
-                            </Button>
-                            <div className="jw-text-center">
-                                {apiKeyLoading && <Spinner />}
-                            </div>
-                        </PanelRow>
-                    </PanelBody>
                 </InspectorControls>
             </Fragment>
             <Fragment>
-
                 <div {...useBlockProps()}>
-                    {(apiKeyLoading) &&
-                        <div className="bfg-loading">
-                            <Spinner size={'large'} />
-                        </div>
-                    }
-
-                    {/*{(apiKey === '' || apiKey === undefined) &&*/}
-                    {/*    <div id="bfg-info-wrap">*/}
-                    {/*        <div className="bfg-info-wrap-inner">*/}
-                    {/*            <span className="bfg-info-emoji">👋</span>*/}
-                    {/*            <h2>{__( 'Welcome to Blocks for GitHub!', 'blocks-for-github' )}</h2>*/}
-                    {/*            <p>{__( 'To begin, please enter your GitHub personal access token in the block\'s setting panel to the right. Don\'t worry, you\'ll only have to do this one time.', 'blocks-for-github' )}</p>*/}
-                    {/*        </div>*/}
-                    {/*    </div>*/}
-                    {/*}*/}
-
-                    {/*{(apiKey !== '' && apiKey !== undefined && !apiKeyLoading) && (*/}
                         <ServerSideRender
                             block="blocks-for-github/block"
                             attributes={{
                                 blockType: attributes.blockType,
-                                apiKey: attributes.apiKey,
                                 profileName: attributes.profileName,
                                 repoUrl: attributes.repoUrl,
                                 mediaId: attributes.mediaId,
@@ -410,7 +295,6 @@ export default function Edit( { attributes, setAttributes } ) {
                                 showTwitter: attributes.showTwitter,
                             }}
                         />
-                    {/*)}*/}
                 </div>
             </Fragment>
         </Fragment>

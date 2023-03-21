@@ -9,41 +9,15 @@ class Block
 {
 
     public array $attributes;
-    private string $accessToken;
-    private string $transientKey;
-    private $transient;
 
     public function __construct(array $attributes)
     {
         $this->attributes   = $attributes;
-        $this->accessToken  = $this->getAccessToken();
-        $this->transientKey = $this->getTransientKey();
-        $this->transient    = get_transient($this->transientKey);
-    }
-
-    private function getAccessToken()
-    {
-        return $this->accessToken = get_option('blocks_for_github_plugin_personal_token', $this->attributes['apiKey']);
-    }
-
-    protected function getTransientKey()
-    {
-        return "blocks_for_github_";
-    }
-
-    protected function getHeaders(): array
-    {
-        return [
-            'headers' =>
-                [
-                    'Authorization' => 'token ' . $this->accessToken,
-                ],
-        ];
     }
 
     protected function fetchData(string $url, string $keySuffix = '')
     {
-        $key  = $this->transientKey . $keySuffix;
+        $key  = "blocks_for_github_$keySuffix";
         $data = get_transient($key);
 
         if (empty($data)) {
