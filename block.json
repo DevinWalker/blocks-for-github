@@ -30,6 +30,10 @@
       "type": "string",
       "default": ""
     },
+    "customTitle": {
+      "type": "string",
+      "default": ""
+    },
     "showTags": {
       "type": "boolean",
       "default": true

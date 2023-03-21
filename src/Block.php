@@ -12,7 +12,7 @@ class Block
 
     public function __construct(array $attributes)
     {
-        $this->attributes   = $attributes;
+        $this->attributes = $attributes;
     }
 
     protected function fetchData(string $url, string $keySuffix = '')
@@ -129,7 +129,12 @@ class Block
                 <div class="bfg-repo-content">
                     <div class="bfg-repo-name-wrap">
                         <h3 class="bfg-repo-name">
-                            <a href="<?php esc_html_e($data->html_url); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e($data->name); ?></a>
+                            <a href="<?php esc_html_e($data->html_url); ?>" target="_blank" rel="noopener noreferrer"><?php
+                                if ( ! empty($this->attributes['customTitle'])) {
+                                    esc_html_e($this->attributes['customTitle']);
+                                } else {
+                                    esc_html_e($data->name);
+                                } ?></a>
                         </h3>
                         <span class="bfg-repo-byline"><?php esc_html_e('By', 'blocks-for-github'); ?>
                             <a href="<?php esc_html_e($data->owner->html_url); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e($data->owner->login); ?></a>
@@ -196,8 +201,7 @@ class Block
                         // Subscribers
                         echo file_get_contents(BLOCKS_FOR_GITHUB_DIR . '/assets/images/mark-github.svg');
                         echo esc_html__('Subscribers', 'blocks-for-github') . ' ' . esc_html__(number_format_i18n($data->subscribers_count)); ?></li>
-                <?php
-                endif; ?>
+                <?php endif; ?>
                 <?php
                 if (isset($data->forks) && $this->attributes['showForks']): ?>
                     <li class="bfg-meta-list--forks"><?php
@@ -233,7 +237,14 @@ class Block
             </div>
 
             <div class="bfg-subheader-content">
-                <h3 class="bfg-profile-name"><?php esc_html_e($data->name); ?></h3>
+                <h3 class="bfg-profile-name">
+                    <?php
+                    if ( ! empty($this->attributes['customTitle'])) {
+                        esc_html_e($this->attributes['customTitle']);
+                    } else {
+                        esc_html_e($data->name);
+                    } ?>
+                </h3>
                 <a href="<?php esc_html_e($data->html_url); ?>" class="bfg-follow-me" target="_blank">
                     <span class="bfg-follow-me__inner">
                             <span class="bfg-follow-me__inner--svg">

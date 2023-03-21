@@ -28,6 +28,7 @@ export default function Edit( { attributes, setAttributes } ) {
     const {
         blockType,
         profileName,
+        customTitle,
         repoUrl,
         showTags,
         showForks,
@@ -106,6 +107,16 @@ export default function Edit( { attributes, setAttributes } ) {
                                     help={__( 'Please enter the URL contents after the `https://github.com/` string. For example: `impress-org/givewp`.', 'blocks-for-github' )}
                                     onChange={( newRepoUrl ) => {
                                         setAttributes( { repoUrl: newRepoUrl } );
+                                    }}
+                                />
+                            </PanelRow>
+                            <PanelRow>
+                                <TextControl
+                                    label={__( 'Customize Repo Name', 'blocks-for-github' )}
+                                    value={customTitle}
+                                    help={__( 'Enter text to customize the title. Leave blank to use the default repo name.', 'blocks-for-github' )}
+                                    onChange={( newCustomTitle ) => {
+                                        setAttributes( { customTitle: newCustomTitle } );
                                     }}
                                 />
                             </PanelRow>
@@ -220,6 +231,16 @@ export default function Edit( { attributes, setAttributes } ) {
                                 </div>
                             </PanelRow>
                             <PanelRow>
+                                <TextControl
+                                    label={__( 'Customize Profile Name', 'blocks-for-github' )}
+                                    value={customTitle}
+                                    help={__( 'Enter text to customize the title. Leave blank to use the default profile name.', 'blocks-for-github' )}
+                                    onChange={( newCustomTitle ) => {
+                                        setAttributes( { customTitle: newCustomTitle } );
+                                    }}
+                                />
+                            </PanelRow>
+                            <PanelRow>
                                 <CheckboxControl
                                     label={__( 'Show bio', 'blocks-for-github' )}
                                     checked={showBioChecked}
@@ -279,6 +300,7 @@ export default function Edit( { attributes, setAttributes } ) {
                             block="blocks-for-github/block"
                             attributes={{
                                 blockType: attributes.blockType,
+                                customTitle: attributes.customTitle,
                                 profileName: attributes.profileName,
                                 repoUrl: attributes.repoUrl,
                                 mediaId: attributes.mediaId,
