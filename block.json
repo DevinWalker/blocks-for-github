@@ -1,86 +1,91 @@
 {
-  "$schema": "https://json.schemastore.org/block.json",
-  "apiVersion": 2,
-  "name": "blocks-for-github/block",
-  "version": "1.0.0",
-  "title": "Blocks for GitHub",
-  "category": "design",
-  "description": "Display your GitHub content in a variety of useful ways using the WordPress block editor.",
-  "supports": {
-    "html": false
-  },
-  "attributes": {
-    "blockType": {
-      "type" : "string",
-      "default": "repository"
+    "$schema": "https://json.schemastore.org/block.json",
+    "apiVersion": 2,
+    "name": "blocks-for-github/block",
+    "version": "1.0.0",
+    "title": "Blocks for GitHub",
+    "category": "design",
+    "description": "Display your GitHub content in a variety of useful ways using the WordPress block editor.",
+    "supports": {
+        "html": false
     },
-    "profileName": {
-      "type": "string",
-      "default": "DevinWalker"
+    "attributes": {
+        "blockType": {
+            "type": "string",
+            "default": "repository"
+        },
+        "profileName": {
+            "type": "string",
+            "default": "DevinWalker"
+        },
+        "repoUrl": {
+            "type": "string",
+            "default": "DevinWalker/blocks-for-github"
+        },
+        "mediaId": {
+            "type": "integer",
+            "default": 0
+        },
+        "mediaUrl": {
+            "type": "string",
+            "default": ""
+        },
+        "customTitle": {
+            "type": "string",
+            "default": ""
+        },
+        "showTags": {
+            "type": "boolean",
+            "default": true
+        },
+        "showForks": {
+            "type": "boolean",
+            "default": true
+        },
+        "showSubscribers": {
+            "type": "boolean",
+            "default": true
+        },
+        "showOpenIssues": {
+            "type": "boolean",
+            "default": true
+        },
+        "showLastUpdate": {
+            "type": "boolean",
+            "default": true
+        },
+        "showBio": {
+            "type": "boolean",
+            "default": true
+        },
+        "showLocation": {
+            "type": "boolean",
+            "default": true
+        },
+        "showOrg": {
+            "type": "boolean",
+            "default": true
+        },
+        "showWebsite": {
+            "type": "boolean",
+            "default": true
+        },
+        "showTwitter": {
+            "type": "boolean",
+            "default": true
+        },
+        "preview": {
+            "type": "boolean",
+            "default": false
+        }
     },
-    "repoUrl": {
-      "type": "string",
-      "default": "DevinWalker/blocks-for-github"
+    "example": {
+        "attributes": {
+            "preview": true
+        }
     },
-    "mediaId": {
-      "type": "integer",
-      "default": 0
-    },
-    "mediaUrl": {
-      "type": "string",
-      "default": ""
-    },
-    "customTitle": {
-      "type": "string",
-      "default": ""
-    },
-    "showTags": {
-      "type": "boolean",
-      "default": true
-    },
-    "showForks": {
-      "type": "boolean",
-      "default": true
-    },
-    "showSubscribers": {
-      "type": "boolean",
-      "default": true
-    },
-    "showOpenIssues": {
-      "type": "boolean",
-      "default": true
-    },
-    "showLastUpdate": {
-      "type": "boolean",
-      "default": true
-    },
-    "showBio": {
-      "type": "boolean",
-      "default": true
-    },
-    "showLocation": {
-      "type" : "boolean",
-      "default": true
-    },
-    "showOrg": {
-      "type" : "boolean",
-      "default": true
-    },
-    "showWebsite": {
-      "type" : "boolean",
-      "default": true
-    },
-    "showTwitter": {
-      "type" : "boolean",
-      "default": true
-    },
-    "preview": {
-      "type" : "boolean",
-      "default": false
-    }
-  },
-  "textdomain": "blocks-for-github",
-  "editorScript": "file:./build/index.js",
-  "editorStyle": "file:./build/index.css",
-  "style": "file:./build/style-index.css"
+    "textdomain": "blocks-for-github",
+    "editorScript": "file:./build/index.js",
+    "editorStyle": "file:./build/index.css",
+    "style": "file:./build/style-index.css"
 }

@@ -47,10 +47,10 @@ class Bootstrap
     public function addAdminLocalizations(): void
     {
         wp_localize_script(
-            'blocks-for-github-profile-editor-script',
+            'blocks-for-github-block-editor-script',
             'bfgPreviews',
             array(
-                'profile_preview' => BLOCKS_FOR_GITHUB_URL . 'assets/images/profile-block-preview.jpg',
+                'block_preview' => BLOCKS_FOR_GITHUB_URL . 'assets/images/preview-image.png',
             )
         );
     }

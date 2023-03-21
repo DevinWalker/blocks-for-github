@@ -6,13 +6,12 @@ import {
     PanelRow,
     RadioControl,
     ResponsiveWrapper,
-    Spinner,
     TextControl,
 } from '@wordpress/components';
-import { Fragment, useEffect, useState } from '@wordpress/element';
+import { Fragment, useState } from '@wordpress/element';
 import { InspectorControls, MediaUpload, MediaUploadCheck, useBlockProps } from '@wordpress/block-editor';
 import ServerSideRender from '@wordpress/server-side-render';
-import { dispatch, useSelect } from '@wordpress/data';
+import { useSelect } from '@wordpress/data';
 
 import './editor.scss';
 
@@ -49,7 +48,11 @@ export default function Edit( { attributes, setAttributes } ) {
     if ( preview ) {
         return (
             <Fragment>
-                <img src={bfgPreviews.profile_preview} />
+                <img
+                    src={bfgPreviews.block_preview}
+                    alt={__( 'Blocks for GitHub', 'blocks-for-github' )}
+                    style={{width: '100%', height: 'auto'}}
+                />
             </Fragment>
         );
     }
@@ -296,27 +299,27 @@ export default function Edit( { attributes, setAttributes } ) {
             </Fragment>
             <Fragment>
                 <div {...useBlockProps()}>
-                        <ServerSideRender
-                            block="blocks-for-github/block"
-                            attributes={{
-                                blockType: attributes.blockType,
-                                customTitle: attributes.customTitle,
-                                profileName: attributes.profileName,
-                                repoUrl: attributes.repoUrl,
-                                mediaId: attributes.mediaId,
-                                mediaUrl: attributes.mediaUrl,
-                                showTags: attributes.showTags,
-                                showForks: attributes.showForks,
-                                showSubscribers: attributes.showSubscribers,
-                                showOpenIssues: attributes.showOpenIssues,
-                                showLastUpdate: attributes.showLastUpdate,
-                                showBio: attributes.showBio,
-                                showLocation: attributes.showLocation,
-                                showOrg: attributes.showOrg,
-                                showWebsite: attributes.showWebsite,
-                                showTwitter: attributes.showTwitter,
-                            }}
-                        />
+                    <ServerSideRender
+                        block="blocks-for-github/block"
+                        attributes={{
+                            blockType: attributes.blockType,
+                            customTitle: attributes.customTitle,
+                            profileName: attributes.profileName,
+                            repoUrl: attributes.repoUrl,
+                            mediaId: attributes.mediaId,
+                            mediaUrl: attributes.mediaUrl,
+                            showTags: attributes.showTags,
+                            showForks: attributes.showForks,
+                            showSubscribers: attributes.showSubscribers,
+                            showOpenIssues: attributes.showOpenIssues,
+                            showLastUpdate: attributes.showLastUpdate,
+                            showBio: attributes.showBio,
+                            showLocation: attributes.showLocation,
+                            showOrg: attributes.showOrg,
+                            showWebsite: attributes.showWebsite,
+                            showTwitter: attributes.showTwitter,
+                        }}
+                    />
                 </div>
             </Fragment>
         </Fragment>
