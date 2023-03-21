@@ -14,14 +14,6 @@
       "type" : "string",
       "default": "repository"
     },
-    "apiKeyState": {
-      "type" : "string",
-      "default": ""
-    },
-    "apiKey": {
-      "type" : "string",
-      "default": ""
-    },
     "profileName": {
       "type": "string",
       "default": "DevinWalker"
