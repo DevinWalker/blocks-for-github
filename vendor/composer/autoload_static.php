@@ -22,6 +22,8 @@ class ComposerStaticInit36a8f0acabd4eb1f09a1e7fdaad3d1b7
 
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'GitHubBlock\\Block' => __DIR__ . '/../..' . '/src/Block.php',
+        'GitHubBlock\\Bootstrap' => __DIR__ . '/../..' . '/src/Bootstrap.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
