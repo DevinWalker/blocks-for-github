@@ -48,7 +48,6 @@ class Block
 
         if (empty($data)) {
             $response = wp_remote_get($url);
-
             if (is_wp_error($response)) {
                 ob_start(); ?>
                 <div class="bfg-notice-wrap">
