@@ -2,8 +2,8 @@
 /**
  * Plugin Name:       Blocks for GitHub
  * Description:       Display your GitHub profile, activity, gists, repos, and more within the WordPress Block Editor, aka Gutenberg.
- * Requires at least: 5.9
- * Requires PHP:      7.0
+ * Requires at least: 6.5
+ * Requires PHP:      8.0
  * Version:           1.0.0
  * Author:            Devin Walker
  * Author URI:        https://devin.org

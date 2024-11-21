@@ -1,0 +1,14 @@
+# Ignore directories
+.github
+assets
+bin
+build
+node_modules
+vendor
+languages
+
+# Ignore files
+composer.lock
+package-lock.json
+phpcs.xml
+.php-cs-fixer.cache
