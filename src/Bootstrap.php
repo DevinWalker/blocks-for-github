@@ -39,6 +39,7 @@ class Bootstrap {
         $block = new Block( $attributes );
 
         return $block->render();
+
     }
 
     public function addAdminLocalizations(): void {
