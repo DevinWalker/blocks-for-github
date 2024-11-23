@@ -28,14 +28,13 @@ jobs:
 
             -   uses: actions/setup-node@v3
                 with:
-                    node-version: '16'
+                    node-version: '18'
                     cache: 'npm'
 
             -   name: Install npm dependencies
                 run: |
-                    npm install -g npm@latest
                     npx update-browserslist-db@latest
-                    npm ci
+                    npm ci --legacy-peer-deps
 
             -   name: Build assets for production
                 run: npm run build
