@@ -1,0 +1,68 @@
+name: Deploy to WordPress.org
+
+on:
+    release:
+        types: [ released ]
+
+jobs:
+    release:
+        name: New release
+        runs-on: ubuntu-20.04
+        environment: live
+        steps:
+            -   name: Checkout code
+                uses: actions/checkout@v2
+
+            -   name: Setup PHP
+                uses: shivammathur/setup-php@v2
+                with:
+                    php-version: 8.0
+                    extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, mysql, mysqli, pdo_mysql, bcmath, soap, intl, gd, exif, iconv, imagick, fileinfo
+                    coverage: none
+
+            -   name: Install composer dependencies
+                uses: php-actions/composer@v5
+                with:
+                    php_version: 8.0
+                    dev: no
+
+            -   uses: actions/setup-node@v2
+                with:
+                    node-version: '12'
+
+            -   name: Install npm dependencies & build for translation
+                run: |
+                    npm install -g npm@7
+                    npm ci
+                    npm run build
+
+                # In order to run this WordPress also needs to be installed
+            -   name: Generate pot file
+                run: |
+                    curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+                    chmod +x wp-cli.phar
+                    mv wp-cli.phar /usr/local/bin/wp
+                    php -d xdebug.mode=off "$(which wp)" i18n make-pot ${{github.workspace}} ${{github.workspace}}/languages/blocks-for-github.pot --exclude="$(cat .distignore | tr "\n" "," | sed 's/,$/ /' | tr " " "\n"),src/**/*.js,*.js.map"
+
+            -   name: Build assets for production
+                run: npm run build
+
+            -   name: WordPress Plugin Deploy
+                id: deploy
+                uses: 10up/action-wordpress-plugin-deploy@stable
+                with:
+                    generate-zip: true
+                env:
+                    SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+                    SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+                    SLUG: blocks-for-github
+
+            -   name: Upload release asset
+                uses: actions/upload-release-asset@v1
+                env:
+                    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                with:
+                    upload_url: ${{ github.event.release.upload_url }}
+                    asset_path: ${{github.workspace}}/blocks-for-github.zip
+                    asset_name: blocks-for-github.zip
+                    asset_content_type: application/zip

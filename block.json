@@ -16,7 +16,7 @@
         },
         "profileName": {
             "type": "string",
-            "default": "DevinWalker"
+            "default": "Octocat"
         },
         "repoUrl": {
             "type": "string",
