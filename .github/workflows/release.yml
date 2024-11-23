@@ -7,11 +7,11 @@ on:
 jobs:
     release:
         name: New release
-        runs-on: ubuntu-20.04
+        runs-on: ubuntu-latest
         environment: live
         steps:
             -   name: Checkout code
-                uses: actions/checkout@v2
+                uses: actions/checkout@v3
 
             -   name: Setup PHP
                 uses: shivammathur/setup-php@v2
@@ -26,26 +26,26 @@ jobs:
                     php_version: 8.0
                     dev: no
 
-            -   uses: actions/setup-node@v2
+            -   uses: actions/setup-node@v3
                 with:
-                    node-version: '12'
+                    node-version: '16'
+                    cache: 'npm'
 
-            -   name: Install npm dependencies & build for translation
+            -   name: Install npm dependencies
                 run: |
-                    npm install -g npm@7
+                    npm install -g npm@latest
+                    npx update-browserslist-db@latest
                     npm ci
-                    npm run build
 
-                # In order to run this WordPress also needs to be installed
+            -   name: Build assets for production
+                run: npm run build
+
             -   name: Generate pot file
                 run: |
                     curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
                     chmod +x wp-cli.phar
                     mv wp-cli.phar /usr/local/bin/wp
                     php -d xdebug.mode=off "$(which wp)" i18n make-pot ${{github.workspace}} ${{github.workspace}}/languages/blocks-for-github.pot --exclude="$(cat .distignore | tr "\n" "," | sed 's/,$/ /' | tr " " "\n"),src/**/*.js,*.js.map"
-
-            -   name: Build assets for production
-                run: npm run build
 
             -   name: WordPress Plugin Deploy
                 id: deploy
