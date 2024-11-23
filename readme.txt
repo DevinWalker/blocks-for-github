@@ -1,6 +1,6 @@
 === Blocks for GitHub ===
 Contributors: dlocc
-Tags: github, github block, block github, github blocks, blocks github, repository display, github profile, github integration, gutenberg blocks
+Tags: github, gutenberg blocks, github profile, repository display, developer tools
 Requires at least: 6.0
 Tested up to: 6.7
 Requires PHP: 8.0
