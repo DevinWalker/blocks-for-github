@@ -11,21 +11,20 @@
         "lint:css": "wp-scripts lint-style",
         "lint:js": "wp-scripts lint-js",
         "start": "wp-scripts start",
-        "run": "wp-scripts start",
         "plugin-zip": "wp-scripts plugin-zip",
         "packages-update": "wp-scripts packages-update"
     },
     "dependencies": {
-        "@wordpress/block-editor": "^8.0.13",
-        "@wordpress/blocks": "^11.1.5",
-        "@wordpress/data": "^6.1.5",
-        "@wordpress/dom-ready": "^3.2.3",
-        "@wordpress/i18n": "^4.2.4",
-        "@wordpress/server-side-render": "^3.0.17"
+        "@wordpress/block-editor": "^14.7.0",
+        "@wordpress/blocks": "^14.1.0",
+        "@wordpress/data": "^10.12.0",
+        "@wordpress/dom-ready": "^4.12.0",
+        "@wordpress/i18n": "^5.12.0",
+        "@wordpress/server-side-render": "^5.12.0"
     },
     "devDependencies": {
-        "@svgr/webpack": "^6.2.0",
-        "@wordpress/scripts": "^19.2.2",
+        "@wordpress/scripts": "^30.5.1",
+        "@svgr/webpack": "^8.1.0",
         "url-loader": "^4.1.1"
     }
 }
