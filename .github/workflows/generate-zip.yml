@@ -14,5 +14,5 @@ jobs:
         uses: impress-org/givewp-github-actions/.github/workflows/generate-zip.yml@master
         with:
             ref: ${{ github.event.inputs.ref }}
-            plugin_slug: wp-rollback
+            plugin_slug: blocks-for-github
             install_composer_packages: false
