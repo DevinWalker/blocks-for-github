@@ -16,28 +16,26 @@ use GitHubBlock\Bootstrap;
 
 const BLOCKS_FOR_GITHUB_FILE = __FILE__;
 define( 'BLOCKS_FOR_GITHUB_DIR', plugin_dir_path( BLOCKS_FOR_GITHUB_FILE ) );
-define( "BLOCKS_FOR_GITHUB_URL", plugin_dir_url( BLOCKS_FOR_GITHUB_FILE ) );
+define( 'BLOCKS_FOR_GITHUB_URL', plugin_dir_url( BLOCKS_FOR_GITHUB_FILE ) );
 const BLOCKS_FOR_GITHUB_SCRIPT_ASSET_PATH = BLOCKS_FOR_GITHUB_DIR . '/build/index.asset.php';
-define( 'BLOCKS_FOR_GITHUB_SCRIPT_ASSET', require( BLOCKS_FOR_GITHUB_SCRIPT_ASSET_PATH ) );
+define( 'BLOCKS_FOR_GITHUB_SCRIPT_ASSET', require BLOCKS_FOR_GITHUB_SCRIPT_ASSET_PATH );
 const BLOCKS_FOR_GITHUB_SCRIPT_NAME = 'blocks-for-github-script';
 
 /**
- * Require WP version 5.5+
+ * Require WP version 6.5+
  */
 register_activation_hook(
     __FILE__,
     function () {
-        if ( ! version_compare( $GLOBALS['wp_version'], '5.5', '>=' ) ) {
+        if ( ! version_compare( $GLOBALS['wp_version'], '6.5', '>=' ) ) {
             wp_die(
-                esc_html__( 'Blocks for GitHub requires WordPress version 5.5 or greater.', 'blocks-for-github' ),
+                esc_html__( 'Blocks for GitHub requires WordPress version 6.5 or greater.', 'blocks-for-github' ),
                 esc_html__( 'Error Activating', 'blocks-for-github' )
             );
         }
     }
 );
 
+require_once __DIR__ . '/vendor/autoload.php';
 
-require_once 'vendor/autoload.php';
-
-$bootstrapPlugin = new Bootstrap();
-$bootstrapPlugin->init();
+(new Bootstrap())->init();
