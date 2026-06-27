@@ -14,6 +14,52 @@ class Block {
         $this->attributes = $attributes;
     }
 
+    /**
+     * Resolve the repository block avatar URL (custom image or GitHub owner avatar).
+     *
+     * Falls back to the repo owner's GitHub avatar for both user- and org-owned repos.
+     */
+    protected function get_repo_avatar_url( object $data ): string {
+        $media_id = (int) ( $this->attributes['customAvatarMediaId'] ?? 0 );
+
+        if ( $media_id > 0 && wp_attachment_is_image( $media_id ) ) {
+            $custom_url = wp_get_attachment_image_url( $media_id, 'medium' );
+
+            if ( is_string( $custom_url ) && $custom_url !== '' ) {
+                return $custom_url;
+            }
+        }
+
+        return $data->owner->avatar_url;
+    }
+
+    /**
+     * Alt text for the repository block avatar image.
+     */
+    protected function get_repo_avatar_alt( object $data ): string {
+        $media_id = (int) ( $this->attributes['customAvatarMediaId'] ?? 0 );
+
+        if ( $media_id > 0 ) {
+            $attachment_alt = get_post_meta( $media_id, '_wp_attachment_image_alt', true );
+
+            if ( is_string( $attachment_alt ) && $attachment_alt !== '' ) {
+                return $attachment_alt;
+            }
+        }
+
+        $owner_type = isset( $data->owner->type ) && $data->owner->type === 'Organization'
+            ? __( 'organization', 'blocks-for-github' )
+            : __( 'owner', 'blocks-for-github' );
+
+        return sprintf(
+            /* translators: 1: repository name, 2: owner or organization label, 3: GitHub login */
+            __( '%1$s %2$s avatar (%3$s)', 'blocks-for-github' ),
+            $data->name,
+            $owner_type,
+            $data->owner->login
+        );
+    }
+
     protected function fetchData( string $url, string $keySuffix = '' ) {
         $key  = "blocks_for_github_$keySuffix";
         $data = get_transient( $key );
@@ -117,12 +163,15 @@ class Block {
      * @throws Exception
      */
     public function renderRepo( $data ) {
+        $avatar_url = $this->get_repo_avatar_url( $data );
+        $avatar_alt = $this->get_repo_avatar_alt( $data );
+
         ob_start(); ?>
         <div class="bfg-wrap bfg-repo" id="bfg-wrap-<?php esc_html_e( $data->id ); ?>">
             <div class="bfg-repo-header bfg-grid-container">
                 <div class="bfg-repo-avatar-wrap">
-                    <img class="bfg-avatar" src="<?php esc_html_e( $data->owner->avatar_url ); ?>"
-                         alt="<?php esc_html_e( $data->name ); ?>" />
+                    <img class="bfg-avatar" src="<?php echo esc_url( $avatar_url ); ?>"
+                         alt="<?php echo esc_attr( $avatar_alt ); ?>" />
                 </div>
                 <div class="bfg-repo-content">
                     <div class="bfg-repo-name-wrap">
