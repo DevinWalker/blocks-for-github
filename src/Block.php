@@ -14,6 +14,48 @@ class Block {
         $this->attributes = $attributes;
     }
 
+    /**
+     * Format a count for compact badge/pill display (GitHub-style).
+     *
+     * Uses locale-aware grouping under 1,000, one decimal k/M between 1,000 and 99,999,
+     * and whole k/M from 100,000 upward so wide counts fit small pills.
+     */
+    protected function format_count( int $count ): string {
+        if ( $count >= 1_000_000 ) {
+            if ( $count >= 100_000_000 ) {
+                return (string) (int) round( $count / 1_000_000 ) . 'M';
+            }
+
+            return $this->format_compact_unit( $count, 1_000_000, 'M' );
+        }
+
+        if ( $count >= 100_000 ) {
+            return (string) (int) round( $count / 1_000 ) . 'k';
+        }
+
+        if ( $count >= 1_000 ) {
+            return $this->format_compact_unit( $count, 1_000, 'k' );
+        }
+
+        return number_format_i18n( $count );
+    }
+
+    /**
+     * @param int    $count  Raw count value.
+     * @param int    $unit   Divisor for the compact unit (1_000 or 1_000_000).
+     * @param string $suffix Compact suffix (`k` or `M`).
+     */
+    protected function format_compact_unit( int $count, int $unit, string $suffix ): string {
+        $value = round( $count / $unit, 1 );
+        $formatted = number_format( $value, 1, '.', '' );
+
+        if ( str_ends_with( $formatted, '.0' ) ) {
+            $formatted = substr( $formatted, 0, -2 );
+        }
+
+        return $formatted . $suffix;
+    }
+
     protected function fetchData( string $url, string $keySuffix = '' ) {
         $key  = "blocks_for_github_$keySuffix";
         $data = get_transient( $key );
@@ -318,11 +360,11 @@ class Block {
                                         <span
                                             class="bfg-top-repo-pill bfg-top-repo-pill--blue"><?php echo file_get_contents(
                                                 BLOCKS_FOR_GITHUB_DIR . '/assets/images/fork.svg'
-                                            ); ?><?php esc_html_e( $repo->forks ); ?></span>
+                                            ); ?><?php echo esc_html( $this->format_count( (int) $repo->forks ) ); ?></span>
                                         <span
                                             class="bfg-top-repo-pill bfg-top-repo-pill--gold"><?php echo file_get_contents(
                                                 BLOCKS_FOR_GITHUB_DIR . '/assets/images/star.svg'
-                                            ); ?><?php esc_html_e( $repo->stargazers_count ); ?></span>
+                                            ); ?><?php echo esc_html( $this->format_count( (int) $repo->stargazers_count ) ); ?></span>
                                     </div>
                                 </div>
 
