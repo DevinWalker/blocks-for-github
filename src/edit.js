@@ -43,6 +43,8 @@ export default function Edit({attributes, setAttributes}) {
 		showTwitter,
 		mediaId,
 		mediaUrl,
+		customAvatarMediaId,
+		customAvatarMediaUrl,
 		preview,
 	} = attributes;
 
@@ -79,11 +81,32 @@ export default function Edit({attributes, setAttributes}) {
 		});
 	};
 
+	const removeCustomAvatar = () => {
+		setAttributes({
+			customAvatarMediaId: 0,
+			customAvatarMediaUrl: '',
+		});
+	};
+
+	const onSelectCustomAvatar = (media) => {
+		setAttributes({
+			customAvatarMediaId: media.id,
+			customAvatarMediaUrl: media.url,
+		});
+	};
+
 	const media = useSelect(
 		(select) => {
 			return select('core').getMedia(mediaId);
 		},
-		[onSelectMedia]
+		[mediaId]
+	);
+
+	const customAvatarMedia = useSelect(
+		(select) => {
+			return select('core').getMedia(customAvatarMediaId);
+		},
+		[customAvatarMediaId]
 	);
 
 	return (
@@ -133,6 +156,76 @@ export default function Edit({attributes, setAttributes}) {
 										setAttributes({customTitle: newCustomTitle});
 									}}
 								/>
+							</PanelRow>
+							<PanelRow>
+								<div className="bfg-media-uploader">
+									<p className={'bfg-label'}>
+										<label>{__('Custom avatar', 'stellarpay')}</label>
+									</p>
+									<MediaUploadCheck>
+										<MediaUpload
+											onSelect={onSelectCustomAvatar}
+											value={customAvatarMediaId}
+											allowedTypes={['image']}
+											render={({open}) => (
+												<Button
+													className={
+														customAvatarMediaId === 0
+															? 'editor-post-featured-image__toggle'
+															: 'editor-post-featured-image__preview'
+													}
+													onClick={open}
+												>
+													{customAvatarMediaId === 0 &&
+														__('Choose an image', 'stellarpay')}
+													{customAvatarMedia !== undefined && (
+														<ResponsiveWrapper
+															naturalWidth={customAvatarMedia.media_details.width}
+															naturalHeight={customAvatarMedia.media_details.height}
+														>
+															<img src={customAvatarMedia.source_url} alt="" />
+														</ResponsiveWrapper>
+													)}
+												</Button>
+											)}
+										/>
+									</MediaUploadCheck>
+									<div className="bfg-media-btns">
+										{customAvatarMediaId !== 0 && (
+											<MediaUploadCheck>
+												<MediaUpload
+													title={__('Replace image', 'stellarpay')}
+													value={customAvatarMediaId}
+													onSelect={onSelectCustomAvatar}
+													allowedTypes={['image']}
+													render={({open}) => (
+														<Button
+															onClick={open}
+															isSmall
+															variant="secondary"
+															className={'bfg-replace-image-btn'}
+														>
+															{__('Replace image', 'stellarpay')}
+														</Button>
+													)}
+												/>
+											</MediaUploadCheck>
+										)}
+										{customAvatarMediaId !== 0 && (
+											<MediaUploadCheck>
+												<Button onClick={removeCustomAvatar} isSmall variant="secondary">
+													{__('Remove image', 'stellarpay')}
+												</Button>
+											</MediaUploadCheck>
+										)}
+									</div>
+									<p className={'bfg-help-text'}>
+										{__(
+											'Optional image for this repo block. When empty, the GitHub owner or organization avatar is used.',
+											'stellarpay'
+										)}
+									</p>
+								</div>
 							</PanelRow>
 							<PanelRow>
 								<CheckboxControl
@@ -340,6 +433,8 @@ export default function Edit({attributes, setAttributes}) {
 							repoUrl: attributes.repoUrl,
 							mediaId: attributes.mediaId,
 							mediaUrl: attributes.mediaUrl,
+							customAvatarMediaId: attributes.customAvatarMediaId,
+							customAvatarMediaUrl: attributes.customAvatarMediaUrl,
 							showTags: attributes.showTags,
 							showForks: attributes.showForks,
 							showSubscribers: attributes.showSubscribers,
